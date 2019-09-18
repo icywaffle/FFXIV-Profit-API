@@ -38,7 +38,6 @@ func (c ItemInfo) Obtain(recipeID int) revel.Result {
 	jsonObject := make(map[string]interface{})
 	jsonObject["MainRecipe"] = baseinfo
 	jsonObject["InnerRecipes"] = innerinfo
-
 	return c.RenderJSON(jsonObject)
 }
 

@@ -38,26 +38,30 @@ type Recipes struct {
 }
 
 type Prices struct {
-	ItemID     int `bson:"ItemID"`
-	Sargatanas struct {
-		History []struct {
-			Added        int  `json:"Added" bson:"Added"` // XIVAPI added time
-			IsHQ         bool `json:"IsHQ" bson:"IsHQ"`
-			PricePerUnit int  `json:"PricePerUnit" bson:"PricePerUnit"`
-			PriceTotal   int  `json:"PriceTotal" bson:"PriceTotal"`
-			PurchaseDate int  `json:"PurchaseDate" bson:"PurchaseDate"`
-			Quantity     int  `json:"Quantity" bson:"Quantity"`
-		} `json:"History" bson:"History"`
-		Prices []struct {
-			Added        int  `json:"Added" bson:"Added"`
-			IsHQ         bool `json:"IsHQ" bson:"IsHQ"`
-			PricePerUnit int  `json:"PricePerUnit" bson:"PricePerUnit"`
-			PriceTotal   int  `json:"PriceTotal" bson:"PriceTotal"`
-			Quantity     int  `json:"Quantity" bson:"Quantity"`
-		} `json:"Prices" bson:"Prices"`
-	} `json:"Sargatanas" bson:"Sargatanas"`
+	ItemID        int `bson:"ItemID"`
+	Sargatanas    `json:"Sargatanas" bson:"Sargatanas"`
 	OnMarketboard bool  `bson:"OnMarketboard"`
 	Added         int64 `bson:"Added"` // Database added time.
+}
+
+type Sargatanas struct {
+	History      []History      `json:"History" bson:"History"`
+	MarketPrices []MarketPrices `json:"Prices" bson:"Prices"`
+}
+type History struct {
+	Added        int  `json:"Added" bson:"Added"` // XIVAPI added time
+	IsHQ         bool `json:"IsHQ" bson:"IsHQ"`
+	PricePerUnit int  `json:"PricePerUnit" bson:"PricePerUnit"`
+	PriceTotal   int  `json:"PriceTotal" bson:"PriceTotal"`
+	PurchaseDate int  `json:"PurchaseDate" bson:"PurchaseDate"`
+	Quantity     int  `json:"Quantity" bson:"Quantity"`
+}
+type MarketPrices struct {
+	Added        int  `json:"Added" bson:"Added"`
+	IsHQ         bool `json:"IsHQ" bson:"IsHQ"`
+	PricePerUnit int  `json:"PricePerUnit" bson:"PricePerUnit"`
+	PriceTotal   int  `json:"PriceTotal" bson:"PriceTotal"`
+	Quantity     int  `json:"Quantity" bson:"Quantity"`
 }
 
 type SimplePrices struct {

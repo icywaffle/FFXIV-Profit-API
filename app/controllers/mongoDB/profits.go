@@ -83,35 +83,17 @@ func (coll Collections) FindPricesDocument(itemID int) (*models.Prices, bool) {
 	return &result, true
 }
 
+// SimplifyPricesDocument is also depreciated
 // This is used for quick and easy prices
 func (coll Collections) SimplifyPricesDocument(itemID int) (*models.SimplePrices, bool) {
-	filter := bson.M{"ItemID": itemID}
-	var fullprices models.Prices
-	err := coll.Prices.FindOne(context.TODO(), filter).Decode(&fullprices)
-	if err != nil {
-		return nil, false
-	}
-	// We should only just copy the value so that the fullprices will disappear
-	var result models.SimplePrices
-	result.ItemID = fullprices.ItemID
-
-	// We have to deal with cases that may not have history or current prices
-	// "IsTracked": true, on the json off of the market.
-	// Use this to be able to figure out whether it's being tracked or not.
-	if len(fullprices.Sargatanas.History) > 0 {
-		result.HistoryPrice = fullprices.Sargatanas.History[0].PricePerUnit
-	} else {
-		result.HistoryPrice = 0
-	}
-	result.OnMarketboard = fullprices.OnMarketboard
-	if result.OnMarketboard {
-		result.LowestMarketPrice = fullprices.Sargatanas.Prices[0].PricePerUnit
-	} else {
-		result.LowestMarketPrice = 0
-	}
-
-	result.Added = fullprices.Added
-	return &result, true
+	now := time.Now()
+	return &models.SimplePrices{
+		ItemID:            itemID,
+		HistoryPrice:      0,
+		LowestMarketPrice: 0,
+		OnMarketboard:     false,
+		Added:             now.Unix(),
+	}, true
 }
 
 // This is used for stronger analysis functions, where we want to see trends etc.
@@ -157,42 +139,33 @@ func (coll Collections) InsertRecipesDocument(recipeID int) *models.Recipes {
 
 }
 
+// InsertPrices is Depreciated.
 func (coll Collections) InsertPricesDocument(itemID int) *models.Prices {
-	byteValue := xivapi.ApiConnect(itemID, "market/item")
-	if byteValue != nil {
-		result := xivapi.Jsonprices(byteValue)
-		// ItemID is not part of the Json file.
-		result.ItemID = itemID
-
-		// If we do have an empty result, it means it's not on the board.
-		// XIVAPI may change this though.
-		if result.ItemID != 0 && len(result.Sargatanas.Prices) != 0 {
-			result.OnMarketboard = true
-		} else {
-			result.OnMarketboard = false
-		}
-		//These variables are not in the json file.
-		now := time.Now()
-		result.Added = now.Unix()
-
-		filter := bson.M{"ItemID": itemID}
-
-		var options options.CountOptions
-		options.SetLimit(1)
-		findcount, _ := coll.Prices.CountDocuments(context.TODO(), filter, &options)
-		if findcount < 1 {
-			coll.Prices.InsertOne(context.TODO(), result)
-			fmt.Println("Inserted Prices into Database: ", result.ItemID)
-		} else {
-			coll.Prices.UpdateOne(context.TODO(), filter, bson.D{
-				{Key: "$set", Value: result},
-			})
-			fmt.Println("Updated Item into Prices Collection :", result.ItemID)
-		}
-
-		return &result
+	now := time.Now()
+	sarg := models.Prices{
+		ItemID: itemID,
 	}
-	return nil
+	sarg.Sargatanas.History = []models.History{
+		models.History{
+			Added:        int(now.Unix()),
+			IsHQ:         false,
+			PricePerUnit: 0,
+			PriceTotal:   0,
+			PurchaseDate: 0,
+			Quantity:     0,
+		},
+	}
+	sarg.Sargatanas.MarketPrices = []models.MarketPrices{
+		models.MarketPrices{
+			Added:        int(now.Unix()),
+			IsHQ:         false,
+			PricePerUnit: 0,
+			PriceTotal:   0,
+			Quantity:     0,
+		},
+	}
+
+	return &sarg
 
 }
 
@@ -252,6 +225,10 @@ func FillProfitsDocument(recipeID int, info InnerInformation) *models.Profits {
 	// Fourinteger := 1234 (Rounded The Final Digit)
 	// Profit Percentage := 12.34%
 	fourinteger := math.Round(float64(profits.Profits) / float64(materialcost) * 10000)
+	// If we have a divide by zero case, we just want to set it to zero then.
+	if materialcost == 0 {
+		fourinteger = 0
+	}
 	profits.ProfitPercentage = float32(fourinteger / 100)
 
 	now := time.Now()
@@ -348,6 +325,7 @@ func BaseInformation(collections CollectionHandler, recipeID int, info InnerInfo
 				info.Prices[baserecipe.IngredientID[i]], indatabase = collections.SimplifyPricesDocument(baserecipe.IngredientID[i])
 				if !indatabase || info.Prices[baserecipe.IngredientID[i]].Added < UpdatedPricesStructTime {
 					collections.InsertPricesDocument(baserecipe.IngredientID[i])
+
 					info.Prices[baserecipe.IngredientID[i]], _ = collections.SimplifyPricesDocument(baserecipe.IngredientID[i])
 				}
 				Mutex.Unlock()
