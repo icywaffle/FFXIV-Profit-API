@@ -1,11 +1,25 @@
+FROM golang:latest AS build
+ENV CGO_ENABLED 0
+ADD . /go/src/marketboard-backend
+WORKDIR /go/src/marketboard-backend
+RUN go get -d ./...
+
+# Install revel framework
+RUN go get -u github.com/revel/revel
+RUN go get -u github.com/revel/cmd/revel
+#build revel app
+RUN GOOS=linux GOARCH=amd64 revel build marketboard-backend backendbin
+
+
+# Stage 2
 FROM alpine:latest
 
-RUN mkdir -p /go/src/marketboard-backend
+RUN mkdir -p /go/src/marketboard-backend/backendbin
 WORKDIR /go/src
 # We need bash to run our sh file.
 RUN apk add --no-cache bash
 
-COPY backendbin /go/src/marketboard-backend
+COPY --from=build /go/src/marketboard-backend/backendbin /go/src/marketboard-backend
 
 # Give full permissions for the files to be read by the script
 RUN chmod -vR 777 /go/src/marketboard-backend
@@ -20,4 +34,4 @@ RUN apk update \
 
 CMD ["bash", "/go/src/marketboard-backend/run.sh"]
 
-EXPOSE 9000
+EXPOSE 8080
