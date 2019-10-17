@@ -11,6 +11,7 @@ import (
 )
 
 var DB mongoDB.Collections
+var UserStorage *mongo.Collection
 
 // Initializes DB so it would give the Clients so that we can access the database
 func InitDB() {
@@ -30,6 +31,8 @@ func InitDB() {
 	DB = mongoDB.Collections{
 		Prices:  database.Collection("Prices"),
 		Recipes: database.Collection("Recipes"),
-		Profits: database.Collection("Profits")}
+		Profits: database.Collection("Profits"),
+	}
+	UserStorage = database.Collection("UserStorage")
 
 }
