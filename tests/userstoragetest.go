@@ -3,8 +3,6 @@ package tests
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"marketboard-backend/app/models"
 
 	"github.com/revel/revel/testing"
@@ -29,10 +27,7 @@ func (t *UserInfoTest) TestIfPostRequestSucceeded() {
 	dataByte, _ := json.Marshal(data)
 	dataReader := bytes.NewReader(dataByte)
 	t.Post("/userinfo/0001", "application/json", dataReader)
-	bodyBytes, _ := ioutil.ReadAll(t.Response.Body)
-	fmt.Println(string(bodyBytes))
-	t.AssertOk()
-	t.AssertContentType("text/html; charset=utf-8")
+	t.AssertEqual(t.Response.Status, "200 OK")
 }
 func (t *UserInfoTest) TestThatIndexPageWorks() {
 	t.Get("/")
