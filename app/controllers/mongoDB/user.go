@@ -39,7 +39,7 @@ func InsertNewUserItemStorage(userStorage *mongo.Collection, userPrice *models.U
 // Once we find a specific user's storage, we just add to it and update it.
 func AddUserItem(userStorage *mongo.Collection, userItemStorage *UserItemStorage, userID string, userPrice *models.UserPrice) {
 	userItemStorage.Recipe[strconv.Itoa(userPrice.RecipeID)] = userPrice
-	filter := bson.M{"UserID": userID}
+	filter := bson.M{"userid": userID}
 	userStorage.UpdateOne(context.TODO(), filter, bson.D{
 		{Key: "$set", Value: userItemStorage},
 	})
