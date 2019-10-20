@@ -14,7 +14,7 @@ type UserInfo struct {
 func (c UserInfo) Store(userPrice *models.UserPrice) revel.Result {
 	UserItemStorage := mongoDB.FindUserItemStorage(UserStorage, userPrice.UserID)
 	if UserItemStorage == nil {
-		mongoDB.InsertNewUserItemStorage(UserStorage, userPrice.UserID)
+		mongoDB.InsertNewUserItemStorage(UserStorage, userPrice, userPrice.UserID)
 	} else {
 		mongoDB.AddUserItem(UserStorage, UserItemStorage, userPrice.UserID, userPrice)
 	}

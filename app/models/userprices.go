@@ -1,7 +1,7 @@
 package models
 
 type UserPrice struct {
-	UserID                int
+	UserID                string
 	RecipeID              int
 	MarketItemPrice       int
 	MarketIngredientPrice []int

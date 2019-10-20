@@ -18,7 +18,7 @@ func (t *UserInfoTest) Before() {
 
 func (t *UserInfoTest) TestIfPostRequestSucceeded() {
 	data := models.UserPrice{
-		UserID:                0001,
+		UserID:                "0001",
 		RecipeID:              33180,
 		MarketItemPrice:       100,
 		MarketIngredientPrice: []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
