@@ -3,6 +3,7 @@ package controllers
 import (
 	"marketboard-backend/app/controllers/mongoDB"
 	"marketboard-backend/app/models"
+	"strconv"
 
 	"github.com/revel/revel"
 )
@@ -20,5 +21,28 @@ func (c UserInfo) Store(userPrice *models.UserPrice) revel.Result {
 	}
 	jsonObject := make(map[string]interface{})
 	jsonObject["message"] = "success"
+	return c.RenderJSON(jsonObject)
+}
+
+func (c UserInfo) Obtain() revel.Result {
+	userID := c.Params.Route.Get("userid")
+	recipeID := c.Params.Route.Get("recipeid")
+	UserItemStorage := mongoDB.FindUserItemStorage(UserStorage, userID)
+
+	jsonObject := make(map[string]interface{})
+	if UserItemStorage != nil {
+		jsonObject["UserPrice"] = UserItemStorage.Recipe[recipeID]
+	} else {
+		recipe, _ := strconv.Atoi(recipeID)
+		// Default to zero
+		jsonObject["UserPrice"] = models.UserPrice{
+			UserID:                userID,
+			RecipeID:              recipe,
+			MarketItemPrice:       0,
+			MarketIngredientPrice: []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			MarketAmount:          []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		}
+	}
+
 	return c.RenderJSON(jsonObject)
 }
