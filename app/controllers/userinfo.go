@@ -30,11 +30,11 @@ func (c UserInfo) Obtain() revel.Result {
 	UserItemStorage := mongoDB.FindUserItemStorage(UserStorage, userID)
 
 	jsonObject := make(map[string]interface{})
-	if UserItemStorage != nil {
+	// If we don't have an object, just autofill to zero for now.
+	if UserItemStorage != nil && UserItemStorage.Recipe[recipeID] != nil {
 		jsonObject["UserPrice"] = UserItemStorage.Recipe[recipeID]
 	} else {
 		recipe, _ := strconv.Atoi(recipeID)
-		// Default to zero
 		jsonObject["UserPrice"] = models.UserPrice{
 			UserID:                userID,
 			RecipeID:              recipe,
