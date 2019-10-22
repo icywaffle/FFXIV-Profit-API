@@ -16,13 +16,19 @@ func (t *UserInfoTest) Before() {
 	println("Set up")
 }
 
-func (t *UserInfoTest) TestIfPostRequestSucceeded() {
-	data := models.UserPrice{
-		UserID:                "0001",
-		RecipeID:              33180,
-		MarketItemPrice:       100,
-		MarketIngredientPrice: []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		MarketAmount:          []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+func (t *UserInfoTest) TestIfPOSTuserinfoSucceeded() {
+	data := models.UserSubmission{
+		UserID:           "0001",
+		RecipeID:         33180,
+		ItemID:           24678,
+		Profits:          0,
+		ProfitPercentage: 0,
+		MarketItemPrice:  100,
+		MarketAmount:     1,
+
+		IngredientItemID:       []int{1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+		MarketIngredientPrice:  []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		MarketIngredientAmount: []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	}
 	dataByte, _ := json.Marshal(data)
 	dataReader := bytes.NewReader(dataByte)
