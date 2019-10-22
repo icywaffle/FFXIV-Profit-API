@@ -31,8 +31,8 @@ func (c UserInfo) Obtain() revel.Result {
 
 	jsonObject := make(map[string]interface{})
 	// If we don't have an object, just autofill to zero for now.
-	if UserItemStorage != nil && UserItemStorage.Recipe[recipeID] != nil {
-		jsonObject["UserPrice"] = UserItemStorage.Recipe[recipeID]
+	if UserItemStorage != nil && UserItemStorage.Recipes[recipeID] != nil {
+		jsonObject["UserPrice"] = UserItemStorage.Recipes[recipeID]
 	} else {
 		recipe, _ := strconv.Atoi(recipeID)
 		jsonObject["UserPrice"] = models.UserPrice{

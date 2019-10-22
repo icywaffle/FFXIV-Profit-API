@@ -10,8 +10,8 @@ import (
 )
 
 type UserItemStorage struct {
-	UserID string
-	Recipe map[string]*models.UserPrice // Stores Recipe, with all related prices
+	UserID  string
+	Recipes map[string]*models.UserPrice // Stores Recipe, with all related prices
 }
 
 // Given a UserStorage collection, it finds all the user's saved item prices
@@ -29,16 +29,16 @@ func FindUserItemStorage(userStorage *mongo.Collection, userID string) *UserItem
 // If a user does not exist in the database, then we would need to give them a table
 func InsertNewUserItemStorage(userStorage *mongo.Collection, userPrice *models.UserPrice, userID string) {
 	newUserStorage := UserItemStorage{
-		UserID: userID,
-		Recipe: make(map[string]*models.UserPrice),
+		UserID:  userID,
+		Recipes: make(map[string]*models.UserPrice),
 	}
-	newUserStorage.Recipe[strconv.Itoa(userPrice.RecipeID)] = userPrice
+	newUserStorage.Recipes[strconv.Itoa(userPrice.RecipeID)] = userPrice
 	userStorage.InsertOne(context.TODO(), newUserStorage)
 }
 
 // Once we find a specific user's storage, we just add to it and update it.
 func AddUserItem(userStorage *mongo.Collection, userItemStorage *UserItemStorage, userID string, userPrice *models.UserPrice) {
-	userItemStorage.Recipe[strconv.Itoa(userPrice.RecipeID)] = userPrice
+	userItemStorage.Recipes[strconv.Itoa(userPrice.RecipeID)] = userPrice
 	filter := bson.M{"userid": userID}
 	userStorage.UpdateOne(context.TODO(), filter, bson.D{
 		{Key: "$set", Value: userItemStorage},
