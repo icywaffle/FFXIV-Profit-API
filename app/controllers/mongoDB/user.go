@@ -53,6 +53,7 @@ func addUserInfoToMap(newUserStorage *UserItemStorage, UserSubmission *models.Us
 	// If the material is craftable, then it'll have it's separate call to this function
 	mainProfits := models.UserProfits{
 		RecipeID:         UserSubmission.RecipeID,
+		ItemID:           UserSubmission.ItemID,
 		IngredientItemID: UserSubmission.IngredientItemID,
 		Profits:          UserSubmission.Profits,
 		ProfitPercentage: UserSubmission.ProfitPercentage,
