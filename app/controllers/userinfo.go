@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"marketboard-backend/app/controllers/mongoDB"
 	"marketboard-backend/app/models"
 	"strconv"
 
@@ -12,23 +11,29 @@ type UserInfo struct {
 	*revel.Controller
 }
 
+// Given a POST request with UserSubmission data,
+// It handles the data by storing info to the Database
 func (c UserInfo) Store(UserSubmission *models.UserSubmission) revel.Result {
-	UserItemStorage := mongoDB.FindUserItemStorage(UserStorage, UserSubmission.UserID)
+
+	UserItemStorage := UserStorageCollection.FindUserItemStorage(UserSubmission.UserID)
 	if UserItemStorage == nil {
-		mongoDB.InsertNewUserItemStorage(UserStorage, UserSubmission, UserSubmission.UserID)
+		UserStorageCollection.InsertNewUserItemStorage(UserSubmission, UserSubmission.UserID)
 	} else {
-		mongoDB.AddUserItem(UserStorage, UserItemStorage, UserSubmission.UserID, UserSubmission)
+		UserStorageCollection.AddUserItem(UserItemStorage, UserSubmission.UserID, UserSubmission)
 	}
 	jsonObject := make(map[string]interface{})
 	jsonObject["message"] = "success"
 	return c.RenderJSON(jsonObject)
 }
 
+// Given a GET request with a userid and recipeid
+// Returns a user's storage document, or nil if there are no user in the database.
+// Or returns an empty object if there's no recipe in the database.
 func (c UserInfo) Obtain() revel.Result {
 	userID := c.Params.Route.Get("userid")
 	recipeID := c.Params.Route.Get("recipeid")
 
-	UserItemStorage := mongoDB.FindUserItemStorage(UserStorage, userID)
+	UserItemStorage := UserStorageCollection.FindUserItemStorage(userID)
 
 	// We need to find all the ingredients for a specific recipe
 	// This is so that we return all the prices that are relevant to a specific recipe

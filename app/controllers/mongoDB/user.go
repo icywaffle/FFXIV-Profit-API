@@ -9,17 +9,27 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+type UserStorageCollection struct {
+	*mongo.Collection
+}
+
+type UserStorageCollectionHandler interface {
+	FindUserItemStorage(userID string) *UserItemStorage
+	InsertNewUserItemStorage(UserSubmission *models.UserSubmission, userID string)
+	AddUserItem(userItemStorage *UserItemStorage, userID string, UserSubmission *models.UserSubmission)
+}
+
 type UserItemStorage struct {
 	UserID  string
 	Prices  map[string]models.UserPrices
 	Profits map[string]models.UserProfits
 }
 
-// Given a UserStorage collection, it finds all the user's saved item prices
-func FindUserItemStorage(userStorage *mongo.Collection, userID string) *UserItemStorage {
+// Finds all items that are stored in the User's Document
+func (coll UserStorageCollection) FindUserItemStorage(userID string) *UserItemStorage {
 	filter := bson.M{"userid": userID}
 	var result UserItemStorage
-	err := userStorage.FindOne(context.TODO(), filter).Decode(&result)
+	err := coll.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
 		// log.Println(err)
 		return nil
@@ -27,28 +37,29 @@ func FindUserItemStorage(userStorage *mongo.Collection, userID string) *UserItem
 	return &result
 }
 
-// If a user does not exist in the database, then we would need to give them a table
-func InsertNewUserItemStorage(userStorage *mongo.Collection, UserSubmission *models.UserSubmission, userID string) {
+// If a user does not exist in the database, then we would need to give them a document
+func (coll UserStorageCollection) InsertNewUserItemStorage(UserSubmission *models.UserSubmission, userID string) {
 	newUserStorage := UserItemStorage{
 		UserID:  userID,
-		Prices:  make(map[string]models.UserPrices),
-		Profits: make(map[string]models.UserProfits),
+		Prices:  make(map[string]models.UserPrices),  // Key: ItemID
+		Profits: make(map[string]models.UserProfits), // Key: RecipeID
 	}
-	addUserInfoToMap(&newUserStorage, UserSubmission)
+	AddUserInfoToMap(&newUserStorage, UserSubmission)
 
-	userStorage.InsertOne(context.TODO(), newUserStorage)
+	coll.InsertOne(context.TODO(), newUserStorage)
 }
 
 // Once we find a specific user's storage, we just add to it and update it.
-func AddUserItem(userStorage *mongo.Collection, userItemStorage *UserItemStorage, userID string, UserSubmission *models.UserSubmission) {
-	addUserInfoToMap(userItemStorage, UserSubmission)
+func (coll UserStorageCollection) AddUserItem(userItemStorage *UserItemStorage, userID string, UserSubmission *models.UserSubmission) {
+	AddUserInfoToMap(userItemStorage, UserSubmission)
 	filter := bson.M{"userid": userID}
-	userStorage.UpdateOne(context.TODO(), filter, bson.D{
+	coll.UpdateOne(context.TODO(), filter, bson.D{
 		{Key: "$set", Value: userItemStorage},
 	})
 }
 
-func addUserInfoToMap(newUserStorage *UserItemStorage, UserSubmission *models.UserSubmission) {
+// Places all the UserSubmission into a user's storage document.
+func AddUserInfoToMap(newUserStorage *UserItemStorage, UserSubmission *models.UserSubmission) {
 	// We add the main recipe first, then it's materials.
 	// If the material is craftable, then it'll have it's separate call to this function
 	mainProfits := models.UserProfits{
