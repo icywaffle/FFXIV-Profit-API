@@ -13,7 +13,7 @@ type ItemInfo struct {
 
 func (c ItemInfo) Index() revel.Result {
 
-	return c.RenderTemplate("Result/Index.html")
+	return c.RenderTemplate("ItemInfo/Index.html")
 }
 
 func (c ItemInfo) Obtain(recipeID int) revel.Result {
