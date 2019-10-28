@@ -9,6 +9,7 @@ import (
 	"marketboard-backend/keys"
 	"net/http"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -16,6 +17,7 @@ import (
 
 /////////////////Recipe Struct Here//////////////////////////
 
+// Unfortunately, this is the state of the API, and what it gives us...
 type AmountIngredient struct {
 	//The outer values
 	AmountIngredient0 int `json:"AmountIngredient0"`
@@ -120,13 +122,21 @@ type xivapierror struct {
 	Error bool `json:"Error"`
 }
 
-// idtype should be "recipe", "item", or "market/item"
+var Mutex sync.Mutex
+
+// idtype should be "recipe", "item"
 // Will return nil if we get an error response.
 func ApiConnect(inputid int, idtype string) []byte {
-	// MAX Rate limit is 30 Req/s -> 0.033s/Req. It's safer to use something
+	// MAX Rate limit is 30 Req/s -> 0.033s/Req.
+	// Unfortunately, as we are now, we cannot increase this rate limit.
+	// Therefore, if multiple threads start calling this ApiConnect,
+	// It would be calling with my key!
+	// For a more scalable method, we would need to actually just send a POST of the payload.
+	Mutex.Lock()
 	time.Sleep(45 * time.Millisecond)
-	byteValue := xivapiconnector(websiteurl(inputid, idtype))
+	byteValue := xivapiconnector(Websiteurl(inputid, idtype))
 	fmt.Println("Connected to API")
+	Mutex.Unlock()
 
 	// Handles invalid json responses.
 	var apierror xivapierror
@@ -139,11 +149,11 @@ func ApiConnect(inputid int, idtype string) []byte {
 
 }
 
-func websiteurl(userID int, idtype string) string {
+func Websiteurl(inputid int, idtype string) string {
 	//Example: https://xivapi.com/Item/14160
 	basewebsite := []byte("https://xivapi.com/")
 	field := []byte(idtype)
-	uniqueID := []byte(strconv.Itoa(userID))
+	uniqueID := []byte(strconv.Itoa(inputid))
 	completefield := append(field[:], '/')
 	userinputurl := append(append(basewebsite[:], completefield[:]...), uniqueID[:]...)
 
@@ -151,16 +161,11 @@ func websiteurl(userID int, idtype string) string {
 	authkey := []byte(keys.XivAuthKey)
 	websiteurl := append(append(userinputurl[:], '?'), authkey[:]...)
 
-	//Example: https://xivapi.com/market/item/3?authkey&servers=Phoenix,Lich,Moogle
-	if idtype == "market/item" {
-		servers := []byte("&servers=Sargatanas")
-		websiteurl = append(websiteurl[:], servers[:]...)
-	}
-
 	s := string(websiteurl)
 	return s
 }
 
+// Directly connects to the API here, and returns a byteValue of the body.
 func xivapiconnector(websiteurl string) []byte {
 
 	//What this does, is open the file, and read it

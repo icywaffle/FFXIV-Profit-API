@@ -29,9 +29,7 @@ func InitDB() {
 	database := client.Database("Marketboard")
 
 	DB = mongoDB.Collections{
-		Prices:  database.Collection("Prices"),
 		Recipes: database.Collection("Recipes"),
-		Profits: database.Collection("Profits"),
 	}
 	UserStorageCollection = mongoDB.UserStorageCollection{
 		Collection: database.Collection("UserStorage"),

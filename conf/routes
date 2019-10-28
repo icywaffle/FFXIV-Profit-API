@@ -9,7 +9,6 @@ module:testrunner
 
 GET     /                                       ItemInfo.Index
 GET     /recipe/:recipeID                       ItemInfo.Obtain
-GET     /profit                                 ItemInfo.Profit
 POST    /userinfo/:userid                       UserInfo.Store
 GET     /userinfo/:userid/recipe/:recipeid      UserInfo.Obtain
 # Ignore favicon requests
