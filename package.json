@@ -1,0 +1,36 @@
+{
+  "name": "marketboard-backend",
+  "version": "1.0.0",
+  "description": "[ffxivprofit](http://ffxivprofit.com/)",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config=Scripts/config/webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/icywaffle/marketboard-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/icywaffle/marketboard-backend/issues"
+  },
+  "homepage": "https://github.com/icywaffle/marketboard-backend#readme",
+  "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/preset-react": "^7.6.3",
+    "babel-loader": "^8.0.6",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9"
+  },
+  "dependencies": {
+    "react-router-dom": "^5.1.2"
+  }
+}
