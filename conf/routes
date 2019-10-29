@@ -6,19 +6,20 @@
 module:testrunner
 # module:jobs
 
-
-GET     /                                       ItemInfo.Index
-GET     /recipe/:recipeID                       ItemInfo.Obtain
-POST    /userinfo/:userid                       UserInfo.Store
-GET     /userinfo/:userid/recipe/:recipeid      UserInfo.Obtain
+# We need to separate the REST API endpoints from the User web application.
+# We can just use a /api/
+GET     /api/                                       ItemInfo.Index
+GET     /api/recipe/:recipeID                       ItemInfo.Obtain
+POST    /api/userinfo/:userid                       UserInfo.Store
+GET     /api/userinfo/:userid/recipe/:recipeid      UserInfo.Obtain
 # Ignore favicon requests
-GET     /favicon.ico                            404
+GET     /api/favicon.ico                            404
 
 # Map static resources from the /app/public folder to the /public path
-GET     /public/*filepath                       Static.Serve("public")
+GET     /api/public/*filepath                       Static.Serve("public")
 
 # Allows React scripts to work since we need to expose all the local script files.
-GET     /Scripts/*filepath                      Static.Serve("Scripts")
+GET     /api/Scripts/*filepath                      Static.Serve("Scripts")
 
 # Catch all, this will route any request into the controller path
 #

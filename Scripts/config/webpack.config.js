@@ -6,6 +6,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, "../dist"),
+        publicPath: "/api/",
         filename: "[name].js"
     },
     module: {
