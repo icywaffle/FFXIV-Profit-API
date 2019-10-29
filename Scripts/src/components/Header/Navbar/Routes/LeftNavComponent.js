@@ -2,8 +2,8 @@ import React from "react"
 
 function LeftNavComponent() {
     return (
-        <div className="uk-navbar-left uk-container uk-container-expand">
-            <ul className="uk-navbar-nav">
+        <div className="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <ul className="nav">
                 <li>
                     <a href="/">Home</a>
                 </li>

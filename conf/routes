@@ -17,7 +17,7 @@ GET     /favicon.ico                            404
 # Map static resources from the /app/public folder to the /public path
 GET     /public/*filepath                       Static.Serve("public")
 
-# Allows React scripts to work
+# Allows React scripts to work since we need to expose all the local script files.
 GET     /Scripts/*filepath                      Static.Serve("Scripts")
 
 # Catch all, this will route any request into the controller path

@@ -1,8 +1,10 @@
 package app
 
 import (
+	"log"
 	"marketboard-backend/app/controllers"
 	"net/http"
+	"os/exec"
 
 	"github.com/revel/revel"
 )
@@ -16,6 +18,12 @@ var (
 )
 
 func init() {
+	// Builds the react scripts before anything runs
+	// This only hot-reloads if we change this function.
+	BuildFrontEnd := exec.Command("npm", "run", "build")
+	if err := BuildFrontEnd.Run(); err != nil {
+		log.Fatal(err)
+	}
 	// Filters is the default set of global filters.
 	revel.Filters = []revel.Filter{
 		ValidateOrigin,
