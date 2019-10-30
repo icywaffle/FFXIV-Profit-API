@@ -127,13 +127,13 @@ var Mutex sync.Mutex
 // idtype should be "recipe", "item"
 // Will return nil if we get an error response.
 func ApiConnect(inputid int, idtype string) []byte {
-	// MAX Rate limit is 30 Req/s -> 0.033s/Req.
+	// MAX Rate limit is 20 Req/s -> 0.05s/Req.
 	// Unfortunately, as we are now, we cannot increase this rate limit.
 	// Therefore, if multiple threads start calling this ApiConnect,
 	// It would be calling with my key!
 	// For a more scalable method, we would need to actually just send a POST of the payload.
 	Mutex.Lock()
-	time.Sleep(45 * time.Millisecond)
+	time.Sleep(60 * time.Millisecond)
 	byteValue := xivapiconnector(Websiteurl(inputid, idtype))
 	fmt.Println("Connected to API")
 	Mutex.Unlock()
