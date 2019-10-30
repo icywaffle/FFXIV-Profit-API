@@ -10,6 +10,10 @@ const useStyles = makeStyles(theme => ({
     button: {
         margin: theme.spacing(1),
     },
+    backendButton: {
+        margin: theme.spacing(1),
+        color: theme.palette.secondary.light,
+    },
 }));
 
 export default function Navbar() {
@@ -41,7 +45,7 @@ export default function Navbar() {
                     <IconButton href="https://github.com/icywaffle/marketboard-frontend" target="_blank" rel="noopener" className={classes.button} aria-label="Back-End">
                         <GitHubIcon />
                     </IconButton>
-                    <IconButton href="https://github.com/icywaffle/marketboard-backend" target="_blank" rel="noopener" className={classes.button} aria-label="Back-End" color="secondary">
+                    <IconButton href="https://github.com/icywaffle/marketboard-backend" target="_blank" rel="noopener" className={classes.backendButton} aria-label="Back-End" color="secondary">
                         <GitHubIcon />
                     </IconButton>
                 </div>
