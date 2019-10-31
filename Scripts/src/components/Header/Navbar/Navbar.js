@@ -14,6 +14,10 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1),
         color: theme.palette.secondary.light,
     },
+    appBar: {
+        position: "sticky",
+        zIndex: 1400,
+    },
 }));
 
 export default function Navbar() {
@@ -21,10 +25,10 @@ export default function Navbar() {
     const sections = [
         ["Profits", "/"],
         ["API", "/api/"],
-        ["Documentation", "/documentation/"],
+        ["Documentation", "/api/documentation/"],
     ]
     return (
-        <AppBar position="static" color="default">
+        <AppBar className={classes.appBar} color="default">
             <Grid
                 container
                 direction="row"

@@ -9,6 +9,7 @@ module:testrunner
 # We need to separate the REST API endpoints from the User web application.
 # We can just use a /api/
 GET     /api/                                       ItemInfo.Index
+GET     /api/documentation/                         ItemInfo.Index
 GET     /api/recipe/:recipeID                       ItemInfo.Obtain
 POST    /api/userinfo/:userid                       UserInfo.Store
 GET     /api/userinfo/:userid/recipe/:recipeid      UserInfo.Obtain
