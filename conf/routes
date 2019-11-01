@@ -11,8 +11,10 @@ module:testrunner
 GET     /api/                                       ItemInfo.Index
 GET     /api/documentation/                         ItemInfo.Index
 GET     /api/recipe/:recipeID                       ItemInfo.Obtain
-POST    /api/userinfo/:userid                       UserInfo.Store
-GET     /api/userinfo/:userid/recipe/:recipeid      UserInfo.Obtain
+
+POST    /api/userinfo/                              UserInfo.Store
+POST    /api/userinfo/login                         UserInfo.Login 
+GET     /api/userinfo/recipe/:recipeid              UserInfo.Obtain
 # Ignore favicon requests
 GET     /api/favicon.ico                            404
 

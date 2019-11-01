@@ -1,7 +1,11 @@
 package controllers
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"marketboard-backend/app/models"
+	"net/http"
 	"strconv"
 
 	"github.com/revel/revel"
@@ -11,29 +15,83 @@ type UserInfo struct {
 	*revel.Controller
 }
 
+func oAuth2Discord(AccessToken string) ([]byte, int) {
+	client := &http.Client{}
+	request, _ := http.NewRequest("GET", "https://discordapp.com/api/users/@me", nil)
+	bearer := fmt.Sprintf("Bearer %s", AccessToken)
+	request.Header.Add("Authorization", bearer)
+
+	response, _ := client.Do(request)
+	result, _ := ioutil.ReadAll(response.Body)
+
+	return result, response.StatusCode
+}
+
+// Given a POST request with just an access token from Discord,
+// It stores you into a session, which is really just a cookie.
+func (c UserInfo) Login(DiscordToken *models.DiscordToken) revel.Result {
+	info, _ := c.Session.Get("DiscordUserID")
+	var DiscordUser models.DiscordUser
+	if info == nil {
+		userbytevalue, StatusCode := oAuth2Discord(DiscordToken.AccessToken)
+		json.Unmarshal(userbytevalue, &DiscordUser)
+
+		// If we have an invalid status code, then that means we don't have the right
+		// access token. So return.
+		if StatusCode != 200 && StatusCode != 201 {
+			c.Response.Status = StatusCode
+			return c.Render()
+		}
+		// Assign to the session, the discorduser ID.
+		// If we've reached here, that must mean we've properly authenticated.
+		c.Session["DiscordUserID"] = DiscordUser.ID
+	}
+	c.Response.Status = 201
+	return c.Render()
+}
+
 // Given a POST request with UserSubmission data,
 // It handles the data by storing info to the Database
 func (c UserInfo) Store(UserSubmission *models.UserSubmission) revel.Result {
 
-	UserItemStorage := UserStorageCollection.FindUserItemStorage(UserSubmission.UserID)
-	if UserItemStorage == nil {
-		UserStorageCollection.InsertNewUserItemStorage(UserSubmission, UserSubmission.UserID)
-	} else {
-		UserStorageCollection.AddUserItem(UserItemStorage, UserSubmission.UserID, UserSubmission)
+	// AUTHENTICATION
+	// Checks if there is a session for this user.
+	userID, _ := c.Session.Get("DiscordUserID")
+	if userID == nil {
+		// Forbidden
+		c.Response.Status = 403
+		return c.Render()
 	}
-	jsonObject := make(map[string]interface{})
-	jsonObject["message"] = "success"
-	return c.RenderJSON(jsonObject)
+
+	// STORAGE
+	// Adds or updates a user's storage.
+	UserItemStorage := UserStorageCollection.FindUserItemStorage(userID.(string))
+	if UserItemStorage == nil {
+		UserStorageCollection.InsertNewUserItemStorage(UserSubmission, userID.(string))
+	} else {
+		UserStorageCollection.AddUserItem(UserItemStorage, userID.(string), UserSubmission)
+	}
+
+	// 201 - CREATED
+	c.Response.Status = 201
+	return c.Render()
 }
 
 // Given a GET request with a userid and recipeid
 // Returns a user's storage document, or nil if there are no user in the database.
 // Or returns an empty object if there's no recipe in the database.
 func (c UserInfo) Obtain() revel.Result {
-	userID := c.Params.Route.Get("userid")
+
+	userID, _ := c.Session.Get("DiscordUserID")
+	if userID == nil {
+		// Forbidden
+		c.Response.Status = 403
+		return c.Render()
+	}
+
 	recipeID := c.Params.Route.Get("recipeid")
 
-	UserItemStorage := UserStorageCollection.FindUserItemStorage(userID)
+	UserItemStorage := UserStorageCollection.FindUserItemStorage(userID.(string))
 
 	// We need to find all the ingredients for a specific recipe
 	// This is so that we return all the prices that are relevant to a specific recipe

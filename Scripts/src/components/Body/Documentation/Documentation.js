@@ -12,7 +12,11 @@ import Container from "@material-ui/core/Container"
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 
-import IntroductionPage from "./IntroductionPage.js"
+import Page from "./Page.js"
+import IntroPageComponent from './IntroPageComponent.js';
+import RecipesPageComponent from './RecipesPageComponent.js';
+import UserInfoPageComponent from './UserInfoPageComponent.js';
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -50,9 +54,9 @@ const useStyles = makeStyles(theme => ({
 
 
 const MainPages = [
-    ["Introduction", <IntroductionPage />],
-    ["Recipes", <div>Recipes</div>],
-    ["UserInfo", <div>UserInfo</div>],
+    ["Introduction", <Page Sections={IntroPageComponent()} />],
+    ["Recipes", <Page Sections={RecipesPageComponent()} />],
+    ["UserInfo", <Page Sections={UserInfoPageComponent()} />],
 ]
 
 

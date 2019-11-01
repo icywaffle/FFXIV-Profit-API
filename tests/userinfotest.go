@@ -20,7 +20,6 @@ func (t *UserInfoTest) Before() {
 ///////////////////////// Mocks //////////////////////////
 func MockUserSubmissionData() *models.UserSubmission {
 	return &models.UserSubmission{
-		UserID:           "Test",
 		RecipeID:         33180,
 		ItemID:           24678,
 		Profits:          0,
