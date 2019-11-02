@@ -9,11 +9,13 @@ module:testrunner
 # We need to separate the REST API endpoints from the User web application.
 # We can just use a /api/
 GET     /api/                                       ItemInfo.Index
+GET     /api/discordcode/                           ItemInfo.Index
 GET     /api/documentation/                         ItemInfo.Index
 GET     /api/recipe/:recipeID                       ItemInfo.Obtain
 
 POST    /api/userinfo/                              UserInfo.Store
-POST    /api/userinfo/login                         UserInfo.Login 
+POST    /api/userinfo/login                         UserInfo.Login
+GET     /api/userinfo/logout                        UserInfo.Logout
 GET     /api/userinfo/recipe/:recipeid              UserInfo.Obtain
 # Ignore favicon requests
 GET     /api/favicon.ico                            404

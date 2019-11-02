@@ -17,6 +17,9 @@ export default function UserInfoPageComponent() {
                     <p>
                         Once a user's session has been established, you can now access your own user storage.
                     </p>
+                    <p>
+                    <strong>Note:</strong> You can only access this endpoint if you're logged in.
+                    </p>
                 </div>,
         },
         {
@@ -28,9 +31,6 @@ export default function UserInfoPageComponent() {
                 </p>
                 <p>
                     With a given user info ID, you can obtain your own recipes that are stored in your user storage.
-                </p>
-                <p>
-                    <strong>Note:</strong> You can only access this endpoint if you're logged in.
                 </p>
             </div>,
         },

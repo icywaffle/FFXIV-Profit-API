@@ -50,6 +50,12 @@ func (c UserInfo) Login(DiscordToken *models.DiscordToken) revel.Result {
 	return c.Render()
 }
 
+func (c UserInfo) Logout() revel.Result {
+	c.Session.Del("DiscordUserID")
+	c.Response.Status = 200
+	return c.Render()
+}
+
 // Given a POST request with UserSubmission data,
 // It handles the data by storing info to the Database
 func (c UserInfo) Store(UserSubmission *models.UserSubmission) revel.Result {

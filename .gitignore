@@ -8,3 +8,6 @@ conf/app.conf
 # We're adding the NPM toolkits, so we have to ignore those.
 node_modules
 public/js/dist
+
+# We have to ignore Oauth keys
+authkeys
