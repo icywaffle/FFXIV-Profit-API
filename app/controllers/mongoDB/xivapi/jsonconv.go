@@ -13,11 +13,14 @@ import (
 	"time"
 )
 
-// Converts Recipe Pages of json, to arrays.
+// Mutex locks for all threads that reach here.
+// Will prevent exceeding rate limits.
+var Mutex sync.Mutex
 
 /////////////////Recipe Struct Here//////////////////////////
 
-// Unfortunately, this is the state of the API, and what it gives us...
+// AmountIngredient comes from the XIVAPI, and unfortunately, this is how it looks.
+// Shows all the Amounts for a specific ingredient at an index.
 type AmountIngredient struct {
 	//The outer values
 	AmountIngredient0 int `json:"AmountIngredient0"`
@@ -32,6 +35,8 @@ type AmountIngredient struct {
 	AmountIngredient9 int `json:"AmountIngredient9"`
 }
 
+// ItemIngredient also comes from the XIVAPI
+// Shows information about a specific ingredient at an index.
 type ItemIngredient struct {
 	ItemIngredient0 struct {
 		Name   string `json:"Name"`
@@ -85,6 +90,7 @@ type ItemIngredient struct {
 	} `json:"ItemIngredient9"`
 }
 
+// IngredientRecipe shows the specific IDs of recipes for an ingredient at an index.
 type IngredientRecipe struct {
 	ItemIngredientRecipe0 []struct {
 		ID int `json:"ID"`
@@ -122,10 +128,7 @@ type xivapierror struct {
 	Error bool `json:"Error"`
 }
 
-var Mutex sync.Mutex
-
-// idtype should be "recipe", "item"
-// Will return nil if we get an error response.
+// ApiConnect will connect to the api according to idtype (should be "recipe", "item") and inputid
 func ApiConnect(inputid int, idtype string) []byte {
 	// MAX Rate limit is 20 Req/s -> 0.05s/Req.
 	// Unfortunately, as we are now, we cannot increase this rate limit.
@@ -143,12 +146,13 @@ func ApiConnect(inputid int, idtype string) []byte {
 	json.Unmarshal(byteValue, &apierror)
 	if apierror.Error {
 		return nil
-	} else {
-		return byteValue
 	}
+
+	return byteValue
 
 }
 
+// Websiteurl builds the url to query the XIVAPI.
 func Websiteurl(inputid int, idtype string) string {
 	//Example: https://xivapi.com/Item/14160
 	basewebsite := []byte("https://xivapi.com/")
@@ -165,7 +169,7 @@ func Websiteurl(inputid int, idtype string) string {
 	return s
 }
 
-// Directly connects to the API here, and returns a byteValue of the body.
+// xivapiconnector directly connects to the API here, and returns a byteValue of the body.
 func xivapiconnector(websiteurl string) []byte {
 
 	//What this does, is open the file, and read it
@@ -183,6 +187,7 @@ func xivapiconnector(websiteurl string) []byte {
 	return byteValue
 }
 
+// Jsonitemrecipe turns the nasty structs into a cleaner object.
 func Jsonitemrecipe(byteValue []byte) models.Recipes {
 
 	// Unmarshal the information into the structs
@@ -287,6 +292,7 @@ func Jsonitemrecipe(byteValue []byte) models.Recipes {
 	return recipes
 }
 
+// Jsonprices just unmarshals the byte response into an object.
 func Jsonprices(byteValue []byte) models.Prices {
 
 	var prices models.Prices

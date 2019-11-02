@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import OAuth2Payload from './authkeys/discord.js'
+import React, { useState, useEffect } from "react"
+import OAuth2Payload from "./authkeys/discord.js"
 import Login from "./Login"
 function OAuth2(props) {
     // Sample Payload
@@ -15,11 +15,13 @@ function OAuth2(props) {
     const [login, setLogin] = useState(localStorage.getItem("user"))
     // For urlencoded forms, we need to manually change our payload
     function encodePayload() {
-        var formBody = [];
+        var formBody = []
         for (var property in OAuth2Payload) {
-            var encodedKey = encodeURIComponent(property);
-            var encodedValue = encodeURIComponent(OAuth2Payload[property])
-            formBody.push(encodedKey + "=" + encodedValue)
+            if ({}.hasOwnProperty.call(OAuth2Payload, property)) {
+                var encodedKey = encodeURIComponent(property)
+                var encodedValue = encodeURIComponent(OAuth2Payload[property.toString()])
+                formBody.push(encodedKey + "=" + encodedValue)
+            }
         }
         formBody = formBody.join("&")
 
@@ -27,7 +29,7 @@ function OAuth2(props) {
     }
 
     // Requests for an access token, so we can access user's info
-    function RequestAccessToken() {
+    function requestAccessToken() {
         var url = "https://discordapp.com/api/oauth2/token"
         OAuth2Payload.code = currentCode
         var encodedPayload = encodePayload()
@@ -35,14 +37,14 @@ function OAuth2(props) {
             method: "POST",
 
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                "Content-Type": "application/x-www-form-urlencoded"
             },
             body: encodedPayload,
         })
             .then(response => response.json())
 
             // Once we get the data access_token , we can access the User Info and store it in session
-            .then(data => {
+            .then((data) => {
                 localStorage.setItem("AccessToken", data.access_token)
                 const payload = {
                     AccessToken: data.access_token,
@@ -51,22 +53,22 @@ function OAuth2(props) {
                 fetch("https://" + window.location.hostname + "/api/userinfo/login/", {
                     method: "POST",
                     headers: {
-                        'Content-Type': 'application/json'
+                        "Content-Type": "application/json"
                     },
                     body: JSON.stringify(payload),
                 })
                 // Then we can go ahead and get user information with this access token.
-                fetch('https://discordapp.com/api/users/@me', {
+                fetch("https://discordapp.com/api/users/@me", {
                     headers: {
                         authorization: `${data.token_type} ${data.access_token}`,
                     },
                 })
-                    .then(response => response.json())
-                    .then(userdata => {
+                    .then((response) => response.json())
+                    .then((userdata) => {
                         localStorage.setItem("user", JSON.stringify(userdata))
                         setLogin(localStorage.getItem("user"))
 
-                        // Once we're done getting data, move the user off of the query string.
+                        // Once we"re done getting data, move the user off of the query string.
                         window.location.href = "https://" + window.location.hostname + "/api/"
                     })
             })
@@ -77,7 +79,7 @@ function OAuth2(props) {
     // Only want to request once, and we only want to do it if we made a request with a code query
     useEffect(() => {
         if (currentCode !== "") {
-            RequestAccessToken()
+            requestAccessToken()
         }
     }, [])
 

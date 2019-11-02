@@ -9,23 +9,26 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// UserStorageCollection stores a user's storage collection from the database, with a few methods.
 type UserStorageCollection struct {
 	*mongo.Collection
 }
 
+// UserStorageCollectionHandler handles the user storage.
 type UserStorageCollectionHandler interface {
 	FindUserItemStorage(userID string) *UserItemStorage
 	InsertNewUserItemStorage(UserSubmission *models.UserSubmission, userID string)
 	AddUserItem(userItemStorage *UserItemStorage, userID string, UserSubmission *models.UserSubmission)
 }
 
+// UserItemStorage is an object that holds for a specific UserID, all their posted prices and profits.
 type UserItemStorage struct {
 	UserID  string
 	Prices  map[string]models.UserPrices
 	Profits map[string]models.UserProfits
 }
 
-// Finds all items that are stored in the User's Document
+// FindUserItemStorage finds all items that are stored in the User's Document
 func (coll UserStorageCollection) FindUserItemStorage(userID string) *UserItemStorage {
 	filter := bson.M{"userid": userID}
 	var result UserItemStorage
@@ -37,7 +40,7 @@ func (coll UserStorageCollection) FindUserItemStorage(userID string) *UserItemSt
 	return &result
 }
 
-// If a user does not exist in the database, then we would need to give them a document
+// InsertNewUserItemStorage creates a new UserItem storage if a user does not exist in the database.
 func (coll UserStorageCollection) InsertNewUserItemStorage(UserSubmission *models.UserSubmission, userID string) {
 	newUserStorage := UserItemStorage{
 		UserID:  userID,
@@ -49,7 +52,7 @@ func (coll UserStorageCollection) InsertNewUserItemStorage(UserSubmission *model
 	coll.InsertOne(context.TODO(), newUserStorage)
 }
 
-// Once we find a specific user's storage, we just add to it and update it.
+// AddUserItem adds to the user storage and update it.
 func (coll UserStorageCollection) AddUserItem(userItemStorage *UserItemStorage, userID string, UserSubmission *models.UserSubmission) {
 	AddUserInfoToMap(userItemStorage, UserSubmission)
 	filter := bson.M{"userid": userID}
@@ -58,7 +61,7 @@ func (coll UserStorageCollection) AddUserItem(userItemStorage *UserItemStorage, 
 	})
 }
 
-// Places all the UserSubmission into a user's storage document.
+// AddUserInfoToMap places all the UserSubmission into a user's storage document.
 func AddUserInfoToMap(newUserStorage *UserItemStorage, UserSubmission *models.UserSubmission) {
 	// We add the main recipe first, then it's materials.
 	// If the material is craftable, then it'll have it's separate call to this function

@@ -1,5 +1,6 @@
 package models
 
+// Profits is the object that holds Profit information for a specific recipe.
 type Profits struct {
 	RecipeID         int     `bson:"RecipeID"`
 	ItemID           int     `bson:"ItemID"`
@@ -18,6 +19,7 @@ type Profits struct {
 	} `bson:"RecipeLevelTable"`
 }
 
+// Recipes is the object that holds all Recipe Information.
 type Recipes struct {
 	Name               string `bson:"Name" json:"Name"`
 	IconID             int    `bson:"IconID" json:"IconID"`
@@ -37,6 +39,7 @@ type Recipes struct {
 	Added             int64      `bson:"Added"`
 }
 
+// Prices is the object that holds Price information for a specific item.
 type Prices struct {
 	ItemID        int `bson:"ItemID"`
 	Sargatanas    `json:"Sargatanas" bson:"Sargatanas"`
@@ -44,10 +47,13 @@ type Prices struct {
 	Added         int64 `bson:"Added"` // Database added time.
 }
 
+// Sargatanas is an object that holds History and Current Market Prices for Sargatanas.
 type Sargatanas struct {
 	History      []History      `json:"History" bson:"History"`
 	MarketPrices []MarketPrices `json:"Prices" bson:"Prices"`
 }
+
+// History is an object that holds the previous price history.
 type History struct {
 	Added        int  `json:"Added" bson:"Added"` // XIVAPI added time
 	IsHQ         bool `json:"IsHQ" bson:"IsHQ"`
@@ -56,6 +62,8 @@ type History struct {
 	PurchaseDate int  `json:"PurchaseDate" bson:"PurchaseDate"`
 	Quantity     int  `json:"Quantity" bson:"Quantity"`
 }
+
+// MarketPrices is an object that holds current price market.
 type MarketPrices struct {
 	Added        int  `json:"Added" bson:"Added"`
 	IsHQ         bool `json:"IsHQ" bson:"IsHQ"`
@@ -64,6 +72,7 @@ type MarketPrices struct {
 	Quantity     int  `json:"Quantity" bson:"Quantity"`
 }
 
+// SimplePrices is a simplified version of the MarketPrices, so that the payloads are simple for now.
 type SimplePrices struct {
 	ItemID            int
 	HistoryPrice      int

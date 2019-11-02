@@ -1,6 +1,6 @@
-FROM golang:latest AS build
+FROM golang:1.13.4 AS build
 ENV CGO_ENABLED 0
-ADD . /go/src/marketboard-backend
+COPY . /go/src/marketboard-backend
 WORKDIR /go/src/marketboard-backend
 RUN go get -d ./...
 
@@ -12,7 +12,7 @@ RUN GOOS=linux GOARCH=amd64 revel build marketboard-backend backendbin
 
 
 # Stage 2
-FROM alpine:latest
+FROM alpine:3.10.3
 
 RUN mkdir -p /go/src/marketboard-backend/backendbin
 WORKDIR /go/src

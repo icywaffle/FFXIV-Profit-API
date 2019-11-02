@@ -8,7 +8,7 @@ export default function Page(props) {
 
     return (
         <React.Fragment>
-            {props.Sections.map((section) => (
+            {props.sections.map((section) => (
                 <React.Fragment>
                     <Typography variant="h5" component="h3">
                         {section.title}

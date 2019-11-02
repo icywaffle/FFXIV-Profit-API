@@ -10,10 +10,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// DB holds the mongo collection for Recipes in our database.
 var DB mongoDB.Collections
+
+// UserStorageCollection holds the User Storage collection from our database.
 var UserStorageCollection mongoDB.UserStorageCollection
 
-// Initializes DB so it would give the Clients so that we can access the database
+// InitDB initializes DB so it would give the Clients so that we can access the database
 func InitDB() {
 	clientOptions := options.Client().ApplyURI(keys.MongoURI)
 	client, err := mongo.Connect(context.TODO(), clientOptions)

@@ -11,6 +11,7 @@ import (
 	"github.com/revel/revel"
 )
 
+// UserInfo controls all User Info related endpoints.
 type UserInfo struct {
 	*revel.Controller
 }
@@ -27,8 +28,8 @@ func oAuth2Discord(AccessToken string) ([]byte, int) {
 	return result, response.StatusCode
 }
 
-// Given a POST request with just an access token from Discord,
-// It stores you into a session, which is really just a cookie.
+// Login stores you into a session, which is really just a cookie,
+// given a POST request with just an access token from Discord
 func (c UserInfo) Login(DiscordToken *models.DiscordToken) revel.Result {
 	info, _ := c.Session.Get("DiscordUserID")
 	var DiscordUser models.DiscordUser
@@ -50,14 +51,15 @@ func (c UserInfo) Login(DiscordToken *models.DiscordToken) revel.Result {
 	return c.Render()
 }
 
+// Logout removes you from the session
 func (c UserInfo) Logout() revel.Result {
 	c.Session.Del("DiscordUserID")
 	c.Response.Status = 200
 	return c.Render()
 }
 
-// Given a POST request with UserSubmission data,
-// It handles the data by storing info to the Database
+// Store handles the data by storing info to the Database
+// given a POST request with UserSubmission data,
 func (c UserInfo) Store(UserSubmission *models.UserSubmission) revel.Result {
 
 	// AUTHENTICATION
@@ -83,8 +85,7 @@ func (c UserInfo) Store(UserSubmission *models.UserSubmission) revel.Result {
 	return c.Render()
 }
 
-// Given a GET request with a userid and recipeid
-// Returns a user's storage document, or nil if there are no user in the database.
+// Obtain returns a user's storage document, or nil if there are no user in the database.
 // Or returns an empty object if there's no recipe in the database.
 func (c UserInfo) Obtain() revel.Result {
 

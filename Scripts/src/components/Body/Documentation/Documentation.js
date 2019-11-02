@@ -1,44 +1,44 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Divider from '@material-ui/core/Divider';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import React from "react"
+import PropTypes from "prop-types"
+import CssBaseline from "@material-ui/core/CssBaseline"
+import Divider from "@material-ui/core/Divider"
+import Drawer from "@material-ui/core/Drawer"
+import Hidden from "@material-ui/core/Hidden"
+import List from "@material-ui/core/List"
+import ListItem from "@material-ui/core/ListItem"
+import ListItemText from "@material-ui/core/ListItemText"
 import Container from "@material-ui/core/Container"
 
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from "@material-ui/core/styles"
 
 
 import Page from "./Page.js"
-import IntroPageComponent from './IntroPageComponent.js';
-import RecipesPageComponent from './RecipesPageComponent.js';
-import UserInfoPageComponent from './UserInfoPageComponent.js';
+import IntroPageComponent from "./IntroPageComponent.js"
+import RecipesPageComponent from "./RecipesPageComponent.js"
+import UserInfoPageComponent from "./UserInfoPageComponent.js"
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
-        display: 'flex',
+        display: "flex",
     },
     drawer: {
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up("sm")]: {
             width: drawerWidth,
             flexShrink: 0,
         },
     },
     appBar: {
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up("sm")]: {
             width: `calc(100% - ${drawerWidth}px)`,
             marginLeft: drawerWidth,
         },
     },
     menuButton: {
         marginRight: theme.spacing(2),
-        [theme.breakpoints.up('sm')]: {
-            display: 'none',
+        [theme.breakpoints.up("sm")]: {
+            display: "none",
         },
     },
     toolbar: theme.mixins.toolbar,
@@ -49,14 +49,14 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
         padding: theme.spacing(3),
     },
-}));
+}))
 
 
 
 const MainPages = [
-    ["Introduction", <Page Sections={IntroPageComponent()} />],
-    ["Recipes", <Page Sections={RecipesPageComponent()} />],
-    ["UserInfo", <Page Sections={UserInfoPageComponent()} />],
+    ["Introduction", <Page sections={IntroPageComponent()} />],
+    ["Recipes", <Page sections={RecipesPageComponent()} />],
+    ["UserInfo", <Page sections={UserInfoPageComponent()} />],
 ]
 
 
@@ -69,7 +69,7 @@ function Documentation(props) {
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
-    };
+    }
 
 
     const drawer = (
@@ -86,10 +86,10 @@ function Documentation(props) {
             </List>
 
         </div>
-    );
+    )
 
     function handlePage() {
-        return MainPages[currentPageIndex][1]
+        return MainPages[parseInt(currentPageIndex)][1]
     }
 
 
@@ -102,7 +102,7 @@ function Documentation(props) {
                     <Drawer
                         container={container}
                         variant="temporary"
-                        anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                        anchor={theme.direction === "rtl" ? "right" : "left"}
                         open={mobileOpen}
                         onClose={handleDrawerToggle}
                         classes={{
@@ -141,7 +141,7 @@ Documentation.propTypes = {
      * Injected by the documentation to work in an iframe.
      * You won't need it on your project.
      */
-    container: PropTypes.instanceOf(typeof Element === 'undefined' ? Object : Element),
-};
+    container: PropTypes.instanceOf(typeof Element === "undefined" ? Object : Element),
+}
 
 export default Documentation;

@@ -2,25 +2,33 @@
 
 [ffxivprofit](http://ffxivprofit.com/)
 
-This is the back-end of the new containized application of the Marketboard Project.
-This became a RESTful API, that allows the front-end to call for any data from the database.
+This is a RESTful API, that allows the front-end to call for any data from the database.
 
 This is just one microservice that allows you to obtain information similar to what XIVAPI already gives you, except this backend handles profit calculations based on the market pricing.
 
 Currently, the market endpoint of XIVAPI is permanently disabled. So we would need to update our front-end and backend to support user submitted data.
+
+However, there is a new API, [Universalis](https://universalis.app/), which can allow us to get some automated prices back again!
+
+## Documentation
+The main documentation can be found here at [ffxivprofit](https://ffxivprofit.com/api/documentation/)
 
 ## Motivation
 Dockerizing an application makes it more modular, and we can update and change our different docker containers and add more microservices, without actually significantly impacting user experience.
 
 ## Tech Stack
 <b>Built with</b>
-- [Golang](https://golang.org/)
+
+-   [Golang](https://golang.org/)
 A simple and fast language, that also has built-in concurrency.
-- [Revel](https://revel.github.io/)
+
+-   [Revel](https://revel.github.io/)
 A full-stack modular web framework that is easy to modify and contains features that you can pick and choose, depending on your needs.
-- [Docker](https://www.docker.com/)
+
+-   [Docker](https://www.docker.com/)
 A containerization application that allows you to create simple microservices, so that you can easily scale your web applications.
-- [XIVAPI](https://xivapi.com/)
+
+-   [XIVAPI](https://xivapi.com/)
 A RESTful API endpoint that allows you to find information of items in an MMORPG, Final Fantasy XIV Online.
 
 ## Current Features
@@ -51,7 +59,7 @@ Hitting the endpoint
 
 Will provide a web-based linked on all the functional/unit tests that were programmed.
 
-## How to use?
+## How to use
 [ffxivprofit!](http://ffxivprofit.com/)
 
 ## Development
@@ -69,5 +77,4 @@ You could just actually run this locally using
 instead of requiring docker.
 
 ## License
-MIT © [2019] (Jacob Nguyen)
-
+MIT © \[2019] (Jacob Nguyen)

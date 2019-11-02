@@ -6,10 +6,12 @@ import (
 	"github.com/revel/revel/testing"
 )
 
+// ItemInfoTest is the testing suite for ItemInfo
 type ItemInfoTest struct {
 	testing.TestSuite
 }
 
+// Before tests initializes
 func (t *ItemInfoTest) Before() {
 	println("Set up")
 }
@@ -17,18 +19,25 @@ func (t *ItemInfoTest) Before() {
 ///////////////////////// Mocks //////////////////////////
 
 ////////////////////// Unit Tests ////////////////////////
-func (t *ItemInfoTest) TestIf_Websiteurl_CreatesValidURL() {
+
+// TestIfWebsiteurlCreatesValidURL checks if we're actually creating the correct URL.
+func (t *ItemInfoTest) TestIfWebsiteurlCreatesValidURL() {
 	t.AssertEqual("https://xivapi.com/item/14160", xivapi.Websiteurl(14160, "item")[:29])
 }
 
 ////////////////// Functional Tests //////////////////////
-func (t *ItemInfoTest) TestIf_XIVAPI_RecipeEndpointExists() {
+
+// TestIfXIVAPIRecipeEndpointExists checks if our Recipe endpoint is still valid.
+func (t *ItemInfoTest) TestIfXIVAPIRecipeEndpointExists() {
 	t.AssertNotEqual(nil, xivapi.ApiConnect(33180, "recipe"))
 }
 
-func (t *ItemInfoTest) TestIf_XIVAPI_Item_EndpointExists() {
+// TestIfXIVAPIItemEndpointExists checks if our Item endpoint is still valid.
+func (t *ItemInfoTest) TestIfXIVAPIItemEndpointExists() {
 	t.AssertNotEqual(nil, xivapi.ApiConnect(14160, "item"))
 }
+
+// After tests finishes
 func (t *ItemInfoTest) After() {
 	println("Tear down")
 }

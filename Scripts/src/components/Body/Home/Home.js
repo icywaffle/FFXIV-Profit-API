@@ -1,18 +1,18 @@
-import React from 'react'
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import React from "react"
+import Container from "@material-ui/core/Container"
+import Typography from "@material-ui/core/Typography"
+import Grid from "@material-ui/core/Grid"
+import Button from "@material-ui/core/Button"
+import { makeStyles } from "@material-ui/core/styles"
+import CssBaseline from "@material-ui/core/CssBaseline"
 
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
+import Card from "@material-ui/core/Card"
+import CardActionArea from "@material-ui/core/CardActionArea"
+import CardActions from "@material-ui/core/CardActions"
+import CardContent from "@material-ui/core/CardContent"
+import CardMedia from "@material-ui/core/CardMedia"
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     heroContent: {
         backgroundColor: theme.palette.background.paper,
         padding: theme.spacing(8, 0, 6),
@@ -29,7 +29,8 @@ const useStyles = makeStyles(theme => ({
     card: {
         maxWidth: 345,
     },
-}));
+}))
+
 const techStacks = [
     {
         title: "Golang",
@@ -68,8 +69,11 @@ const techStacks = [
         link: "https://xivapi.com/",
     },
 ]
+
 function Home() {
-    const classes = useStyles();
+
+    const classes = useStyles()
+
     return (
         <React.Fragment>
             <CssBaseline />
@@ -114,7 +118,7 @@ function Home() {
                         justify="space-evenly"
                         alignItems="center"
                     >
-                        {techStacks.map(techStack => (
+                        {techStacks.map((techStack) => (
                             <Grid item>
                                 <Card className={classes.card}>
                                     <CardActionArea>

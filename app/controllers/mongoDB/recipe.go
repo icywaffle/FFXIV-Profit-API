@@ -14,32 +14,37 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// We don't want users to create a new mutex every time.
+// Mutex is a global lock, that locks can lock all new client threads.
 var Mutex sync.Mutex
 
+// Collections just holds our Recipe Collection in the database, that has a few methods.
 type Collections struct {
 	Recipes *mongo.Collection
 }
 
+// Information holds all of our Recipes, obtained from the recipe collection.
 type Information struct {
 	Recipes *models.Recipes
 }
 
+// InnerInformation contains the inner recipes for some [key] = recipe ID
 type InnerInformation struct {
-	Recipes map[int]*models.Recipes // Contains the inner recipes for some key = Recipe.ID
+	Recipes map[int]*models.Recipes
 }
 
+// Info stores both Information and InnerInformation into one object
 type Info struct {
 	*Information
 	*InnerInformation
 }
 
+// CollectionHandler has the methods for a specific mongo collection.
 type CollectionHandler interface {
 	FindRecipesDocument(recipeID int) (*models.Recipes, bool)
 	InsertRecipesDocument(recipeID int) *models.Recipes
 }
 
-// Will return false if there's no recipe in the xivapi.
+// FindRecipesDocument will return false if there's no recipe in the xivapi.
 func (coll Collections) FindRecipesDocument(recipeID int) (*models.Recipes, bool) {
 	filter := bson.M{"RecipeID": recipeID}
 	var result models.Recipes
@@ -50,7 +55,7 @@ func (coll Collections) FindRecipesDocument(recipeID int) (*models.Recipes, bool
 	return &result, true
 }
 
-// Will insert a document, or update it if it's already in the collection.
+// InsertRecipesDocument will insert a document, or update it if it's already in the collection.
 func (coll Collections) InsertRecipesDocument(recipeID int) *models.Recipes {
 	byteValue := xivapi.ApiConnect(recipeID, "recipe")
 	// We don't want to be inserting nil values into our xivapi.
@@ -76,13 +81,12 @@ func (coll Collections) InsertRecipesDocument(recipeID int) *models.Recipes {
 		}
 
 		return &result
-	} else {
-		return nil
 	}
-
+	// If we have nothing, then just return nothing
+	return nil
 }
 
-// Uses recursion to fill the Information maps and inner information.
+// BaseInformation uses recursion to fill the Information maps and inner information.
 // A recipe w/ len(IngredientRecipes) = 0, should be at the top of the stack.
 // Will handle if there are no items in the xivapi.
 // Will also handle struct updates, if you've updated the struct times ontop of xivapi.go.

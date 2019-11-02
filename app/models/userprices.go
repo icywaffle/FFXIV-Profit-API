@@ -1,5 +1,6 @@
 package models
 
+// UserSubmission is an object that holds the payload that is necessary to store in the database.
 type UserSubmission struct {
 	UserID           string
 	RecipeID         int
@@ -14,6 +15,7 @@ type UserSubmission struct {
 	MarketIngredientAmount []int
 }
 
+// UserPrices are the POSTed user prices for a specific item
 type UserPrices struct {
 	ItemID          int
 	UsedFor         map[string]bool
@@ -21,6 +23,7 @@ type UserPrices struct {
 	MarketAmount    int
 }
 
+// UserProfits is the calculated profit for a specific recipe.
 type UserProfits struct {
 	RecipeID         int
 	ItemID           int

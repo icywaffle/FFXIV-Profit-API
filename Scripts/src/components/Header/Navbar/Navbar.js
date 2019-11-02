@@ -1,10 +1,10 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import GitHubIcon from '@material-ui/icons/GitHub';
-import IconButton from '@material-ui/core/IconButton';
-import Grid from '@material-ui/core/Grid';
+import React from "react"
+import { makeStyles } from "@material-ui/core/styles"
+import AppBar from "@material-ui/core/AppBar"
+import Button from "@material-ui/core/Button"
+import GitHubIcon from "@material-ui/icons/GitHub"
+import IconButton from "@material-ui/core/IconButton"
+import Grid from "@material-ui/core/Grid"
 
 import MenuIcon from "@material-ui/icons/Menu"
 
@@ -22,10 +22,10 @@ const useStyles = makeStyles(theme => ({
     appBar: {
         position: "sticky",
     },
-}));
+}))
 
 export default function Navbar() {
-    const classes = useStyles();
+    const classes = useStyles()
     const sections = [
         ["Profits", "/"],
         ["API", "/api/"],
@@ -45,7 +45,7 @@ export default function Navbar() {
                     </IconButton>
                 </Grid>
                 <Grid item xs={7}>
-                    {sections.map(section => (
+                    {sections.map((section) => (
                         <Button
                             href={section[1]}
                             className={classes.button}
@@ -72,12 +72,12 @@ export default function Navbar() {
                         </Grid>
                         <Grid item>
                             <Router>
-                                <Route path="/api*" render={querycode => <OAuth2 code={querycode} />} />
+                                <Route path="/api*" render={(querycode) => <OAuth2 code={querycode} />} />
                             </Router>
                         </Grid>
                     </Grid>
                 </Grid>
             </Grid>
         </AppBar>
-    );
+    )
 }

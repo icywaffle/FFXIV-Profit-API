@@ -9,15 +9,19 @@ import (
 	"github.com/revel/revel/testing"
 )
 
+// UserInfoTest is a testing Suite for UserInfo
 type UserInfoTest struct {
 	testing.TestSuite
 }
 
+// Before initializes before our tests runs.
 func (t *UserInfoTest) Before() {
 	println("Set up")
 }
 
 ///////////////////////// Mocks //////////////////////////
+
+// MockUserSubmissionData mocks a Payload to the POST /userinfo/ endpoint
 func MockUserSubmissionData() *models.UserSubmission {
 	return &models.UserSubmission{
 		RecipeID:         33180,
@@ -33,6 +37,7 @@ func MockUserSubmissionData() *models.UserSubmission {
 	}
 }
 
+// MockUserItemStorage mocks a user's storage in the database
 func MockUserItemStorage() *mongoDB.UserItemStorage {
 	return &mongoDB.UserItemStorage{
 		UserID:  "Test",
@@ -42,7 +47,9 @@ func MockUserItemStorage() *mongoDB.UserItemStorage {
 }
 
 ////////////////////// Unit Tests ////////////////////////
-func (t *UserInfoTest) TestIf_AddUserInfoToMap_ChangesInfo() {
+
+// TestIfAddUserInfoToMapChangesInfo checks if we are editing our user's storage.
+func (t *UserInfoTest) TestIfAddUserInfoToMapChangesInfo() {
 	MockUserItemStorage := MockUserItemStorage()
 	MockUserSubmissionData := MockUserSubmissionData()
 	mongoDB.AddUserInfoToMap(MockUserItemStorage, MockUserSubmissionData)
@@ -61,7 +68,7 @@ func (t *UserInfoTest) TestIf_AddUserInfoToMap_ChangesInfo() {
 
 ////////////////// Functional Tests //////////////////////
 
-// Checks if we can send a proper POST request to the backend server
+// TestIfPOSTuserinfoSucceeded checks if we can send a proper POST request to the backend server
 func (t *UserInfoTest) TestIfPOSTuserinfoSucceeded() {
 	dataByte, _ := json.Marshal(MockUserSubmissionData())
 	dataReader := bytes.NewReader(dataByte)
@@ -69,19 +76,19 @@ func (t *UserInfoTest) TestIfPOSTuserinfoSucceeded() {
 	t.AssertEqual(t.Response.Status, "200 OK")
 }
 
-// Checks if we can send a GET request to the backend server for a user info
+// TestifGETuserinfoSucceeded checks if we can send a GET request to the backend server for a user info
 func (t *UserInfoTest) TestifGETuserinfoSucceeded() {
 	t.Get("/userinfo/Test/recipe/33180")
 	t.AssertEqual(t.Response.Status, "200 OK")
 }
 
-// We need to unmarshal the response from /userinfo/Test/recipe/:recipeID
+// UserInfoResponse is a placeholder to unmarshal the response from /userinfo/Test/recipe/:recipeID
 type UserInfoResponse struct {
 	UserPrices  map[string]models.UserPrices  `json:"UserPrices"`
 	UserProfits map[string]models.UserProfits `json:"UserProfits"`
 }
 
-// Checks if we can obtain data from the database after posting data
+// TestIfDatabaseDocumentExistsAfterPOST checks if we can obtain data from the database after posting data
 func (t *UserInfoTest) TestIfDatabaseDocumentExistsAfterPOST() {
 	// We need to refresh the data just in case
 	dataByte, _ := json.Marshal(MockUserSubmissionData())
@@ -95,6 +102,8 @@ func (t *UserInfoTest) TestIfDatabaseDocumentExistsAfterPOST() {
 	json.Unmarshal(t.ResponseBody, &UserInfoResponse)
 	t.AssertNotEqual(UserInfoResponse, emptyUserInfoResponse)
 }
+
+// After shows when tests are completed
 func (t *UserInfoTest) After() {
 	println("Tear down")
 }
