@@ -128,8 +128,8 @@ type xivapierror struct {
 	Error bool `json:"Error"`
 }
 
-// ApiConnect will connect to the api according to idtype (should be "recipe", "item") and inputid
-func ApiConnect(inputid int, idtype string) []byte {
+// APIConnect will connect to the api according to idtype (should be "recipe", "item") and inputid
+func APIConnect(inputid int, idtype string) []byte {
 	// MAX Rate limit is 20 Req/s -> 0.05s/Req.
 	// Unfortunately, as we are now, we cannot increase this rate limit.
 	// Therefore, if multiple threads start calling this ApiConnect,

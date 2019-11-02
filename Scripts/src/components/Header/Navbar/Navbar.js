@@ -11,7 +11,7 @@ import MenuIcon from "@material-ui/icons/Menu"
 import { BrowserRouter as Router, Route } from "react-router-dom"
 import OAuth2 from "./OAuth2"
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     button: {
         margin: theme.spacing(1),
     },

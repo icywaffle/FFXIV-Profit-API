@@ -41,7 +41,7 @@ function OAuth2(props) {
             },
             body: encodedPayload,
         })
-            .then(response => response.json())
+            .then((response) => response.json())
 
             // Once we get the data access_token , we can access the User Info and store it in session
             .then((data) => {

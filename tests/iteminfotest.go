@@ -29,12 +29,12 @@ func (t *ItemInfoTest) TestIfWebsiteurlCreatesValidURL() {
 
 // TestIfXIVAPIRecipeEndpointExists checks if our Recipe endpoint is still valid.
 func (t *ItemInfoTest) TestIfXIVAPIRecipeEndpointExists() {
-	t.AssertNotEqual(nil, xivapi.ApiConnect(33180, "recipe"))
+	t.AssertNotEqual(nil, xivapi.APIConnect(33180, "recipe"))
 }
 
 // TestIfXIVAPIItemEndpointExists checks if our Item endpoint is still valid.
 func (t *ItemInfoTest) TestIfXIVAPIItemEndpointExists() {
-	t.AssertNotEqual(nil, xivapi.ApiConnect(14160, "item"))
+	t.AssertNotEqual(nil, xivapi.APIConnect(14160, "item"))
 }
 
 // After tests finishes

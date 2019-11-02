@@ -49,7 +49,7 @@ func init() {
 	// revel.OnAppStart(FillCache)
 }
 
-// We need to enable CORS policy, and handles pre-flight requests
+// ValidateOrigin enables CORS policy, and handles pre-flight requests
 var ValidateOrigin = func(c *revel.Controller, fc []revel.Filter) {
 	if c.Request.Method == "OPTIONS" {
 		c.Response.Out.Header().Add("Access-Control-Allow-Origin", "*")

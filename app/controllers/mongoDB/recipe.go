@@ -57,7 +57,7 @@ func (coll Collections) FindRecipesDocument(recipeID int) (*models.Recipes, bool
 
 // InsertRecipesDocument will insert a document, or update it if it's already in the collection.
 func (coll Collections) InsertRecipesDocument(recipeID int) *models.Recipes {
-	byteValue := xivapi.ApiConnect(recipeID, "recipe")
+	byteValue := xivapi.APIConnect(recipeID, "recipe")
 	// We don't want to be inserting nil values into our xivapi.
 	if byteValue != nil {
 		result := xivapi.Jsonitemrecipe(byteValue)

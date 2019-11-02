@@ -17,7 +17,7 @@ import IntroPageComponent from "./IntroPageComponent.js"
 import RecipesPageComponent from "./RecipesPageComponent.js"
 import UserInfoPageComponent from "./UserInfoPageComponent.js"
 
-const drawerWidth = 240;
+const drawerWidth = 240
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,21 +54,21 @@ const useStyles = makeStyles((theme) => ({
 
 
 const MainPages = [
-    ["Introduction", <Page sections={IntroPageComponent()} />],
-    ["Recipes", <Page sections={RecipesPageComponent()} />],
-    ["UserInfo", <Page sections={UserInfoPageComponent()} />],
+    ["Introduction", <Page sections={new IntroPageComponent()} />],
+    ["Recipes", <Page sections={new RecipesPageComponent()} />],
+    ["UserInfo", <Page sections={new UserInfoPageComponent()} />],
 ]
 
 
 function Documentation(props) {
-    const { container } = props;
-    const classes = useStyles();
-    const theme = useTheme();
-    const [mobileOpen, setMobileOpen] = React.useState(false);
+    const { container } = props
+    const classes = useStyles()
+    const theme = useTheme()
+    const [mobileOpen, setMobileOpen] = React.useState(false)
     const [currentPageIndex, setCurrentPage] = React.useState(0)
 
     const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen);
+        setMobileOpen(!mobileOpen)
     }
 
 
@@ -133,7 +133,7 @@ function Documentation(props) {
                 </Container>
             </main>
         </div>
-    );
+    )
 }
 
 Documentation.propTypes = {
@@ -144,4 +144,4 @@ Documentation.propTypes = {
     container: PropTypes.instanceOf(typeof Element === "undefined" ? Object : Element),
 }
 
-export default Documentation;
+export default Documentation
