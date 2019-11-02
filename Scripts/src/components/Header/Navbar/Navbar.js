@@ -6,6 +6,8 @@ import GitHubIcon from '@material-ui/icons/GitHub';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 
+import MenuIcon from "@material-ui/icons/Menu"
+
 import { BrowserRouter as Router, Route } from "react-router-dom"
 import OAuth2 from "./OAuth2"
 
@@ -18,7 +20,7 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.secondary.light,
     },
     appBar: {
-        position: "static",
+        position: "sticky",
     },
 }));
 
@@ -37,7 +39,12 @@ export default function Navbar() {
                 justify="space-between"
                 alignItems="center"
             >
-                <div>
+                <Grid item xs={2}>
+                    <IconButton className={classes.menuButton} color="inherit" aria-label="menu">
+                        <MenuIcon />
+                    </IconButton>
+                </Grid>
+                <Grid item xs={7}>
                     {sections.map(section => (
                         <Button
                             href={section[1]}
@@ -46,18 +53,30 @@ export default function Navbar() {
                             {section[0]}
                         </Button>
                     ))}
-                </div>
-                <div>
-                    <IconButton href="https://github.com/icywaffle/marketboard-frontend" target="_blank" rel="noopener" className={classes.button} aria-label="Back-End">
-                        <GitHubIcon />
-                    </IconButton>
-                    <IconButton href="https://github.com/icywaffle/marketboard-backend" target="_blank" rel="noopener" className={classes.backendButton} aria-label="Back-End" color="secondary">
-                        <GitHubIcon />
-                    </IconButton>
-                    <Router>
-                        <Route path="/api*" render={querycode => <OAuth2 code={querycode} />} />
-                    </Router>
-                </div>
+                </Grid>
+                <Grid item xs={3}>
+                    <Grid container
+                        direction="row"
+                        justify="flex-end"
+                        alignItems="center"
+                    >
+                        <Grid item>
+                            <IconButton href="https://github.com/icywaffle/marketboard-frontend" target="_blank" rel="noopener" className={classes.button} aria-label="Back-End">
+                                <GitHubIcon />
+                            </IconButton>
+                        </Grid>
+                        <Grid item>
+                            <IconButton href="https://github.com/icywaffle/marketboard-backend" target="_blank" rel="noopener" className={classes.backendButton} aria-label="Back-End" color="secondary">
+                                <GitHubIcon />
+                            </IconButton>
+                        </Grid>
+                        <Grid item>
+                            <Router>
+                                <Route path="/api*" render={querycode => <OAuth2 code={querycode} />} />
+                            </Router>
+                        </Grid>
+                    </Grid>
+                </Grid>
             </Grid>
         </AppBar>
     );
