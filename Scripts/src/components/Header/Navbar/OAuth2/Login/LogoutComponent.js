@@ -1,6 +1,5 @@
 import React from "react"
 import IconButton from "@material-ui/core/IconButton"
-import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"
 import { makeStyles } from "@material-ui/core/styles"
 import Avatar from "@material-ui/core/Avatar"
@@ -9,11 +8,18 @@ import List from "@material-ui/core/List"
 import ListItem from "@material-ui/core/ListItem"
 import ListItemText from "@material-ui/core/ListItemText"
 
+import ClickAwayListener from "@material-ui/core/ClickAwayListener"
+import Grow from "@material-ui/core/Grow"
+import Paper from "@material-ui/core/Paper"
+import Popper from "@material-ui/core/Popper"
+import MenuList from "@material-ui/core/MenuList"
+
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: "100%",
-        maxWidth: 360,
-        backgroundColor: theme.palette.background.paper,
+        display: "flex",
+    },
+    paper: {
+        marginRight: theme.spacing(2),
     },
     logout: {
         marginRight: theme.spacing(2),
@@ -26,39 +32,78 @@ const useStyles = makeStyles((theme) => ({
         width: 24,
         height: 24,
     },
+    menu: {
+        zIndex: theme.zIndex.drawer + 2,
+    },
 }))
 
 function LogoutComponent(props) {
     const classes = useStyles
-    const [anchorEl, setAnchorEl] = React.useState(null)
+    const [open, setOpen] = React.useState(false)
+    const anchorRef = React.useRef(null)
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget)
+    const handleToggle = () => {
+        setOpen(prevOpen => !prevOpen)
     }
-    const handleClose = () => {
-        setAnchorEl(null)
+
+    const handleClose = (event) => {
+        if (anchorRef.current && anchorRef.current.contains(event.target)) {
+            return
+        }
+
+        setOpen(false)
     }
+
+    function handleListKeyDown(event) {
+        if (event.key === "Tab") {
+            event.preventDefault()
+            setOpen(false)
+        }
+    }
+
+    // return focus to the button when we transitioned from !open -> open
+    const prevOpen = React.useRef(open)
+    React.useEffect(() => {
+        if (prevOpen.current === true && open === false) {
+            anchorRef.current.focus()
+        }
+
+        prevOpen.current = open
+    }, [open])
+
     return (
         <React.Fragment>
-            <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                <Avatar alt={props.userinfo.id} src={"https://cdn.discordapp.com/avatars/" + props.userinfo.id + "/" + props.userinfo.avatar + ".gif"} className={classes.avatar} />
-            </IconButton>
-            <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                transformOrigin={{ vertical: "top", horizontal: "right" }}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-            >
-                <List className={classes.root}>
-                    <ListItem>
-                        <ListItemText primary="Logged in as" secondary={props.userinfo.username + " #" + props.userinfo.discriminator} />
-                    </ListItem>
-                </List>
-                <MenuItem className={classes.logout} onClick={props.Logout}>Logout</MenuItem>
-            </Menu>
+            <div className={classes.root}>
+                <IconButton
+                    ref={anchorRef}
+                    aria-controls="menu-list-grow"
+                    aria-haspopup="true"
+                    onClick={handleToggle}
+                >
+                    <Avatar alt={props.userinfo.id} src={"https://cdn.discordapp.com/avatars/" + props.userinfo.id + "/" + props.userinfo.avatar + ".gif"} className={classes.avatar} />
+                </IconButton>
+                <Popper open={open} anchorEl={anchorRef.current} transition disablePortal>
+                    {({ TransitionProps, placement }) => (
+                        <Grow
+                            {...TransitionProps}
+                            style={{ transformOrigin: placement === "bottom" ? "center top" : "center bottom" }}
+                        >
+                            <Paper id="menu-list-grow">
+                                <ClickAwayListener onClickAway={handleClose}>
+                                    <MenuList autoFocusItem={open} onKeyDown={handleListKeyDown}>
+                                        <List className={classes.root}>
+                                            <ListItem>
+                                                <ListItemText primary="Logged in as" secondary={props.userinfo.username + " #" + props.userinfo.discriminator} />
+                                            </ListItem>
+                                        </List>
+                                        <MenuItem className={classes.logout} onClick={props.Logout}>Logout</MenuItem>
+                                    </MenuList>
+                                </ClickAwayListener>
+                            </Paper>
+                        </Grow>
+                    )}
+                </Popper>
+            </div>
         </React.Fragment>
     )
 }

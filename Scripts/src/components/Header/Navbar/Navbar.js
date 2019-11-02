@@ -21,15 +21,16 @@ const useStyles = makeStyles((theme) => ({
     },
     appBar: {
         position: "sticky",
+        zIndex: theme.zIndex.drawer + 1,
     },
 }))
 
 export default function Navbar() {
     const classes = useStyles()
     const sections = [
-        ["Profits", "/"],
-        ["API", "/api/"],
+        ["API Home", "/api/"],
         ["Documentation", "/api/documentation/"],
+        ["Profits Home", "/"],
     ]
     return (
         <AppBar className={classes.appBar} color="default">
@@ -40,11 +41,8 @@ export default function Navbar() {
                 alignItems="center"
             >
                 <Grid item xs={2}>
-                    <IconButton className={classes.menuButton} color="inherit" aria-label="menu">
-                        <MenuIcon />
-                    </IconButton>
                 </Grid>
-                <Grid item xs={7}>
+                <Grid item xs={6}>
                     {sections.map((section) => (
                         <Button
                             href={section[1]}
@@ -54,10 +52,10 @@ export default function Navbar() {
                         </Button>
                     ))}
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                     <Grid container
                         direction="row"
-                        justify="flex-end"
+                        justify="flex-start"
                         alignItems="center"
                     >
                         <Grid item>
