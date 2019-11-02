@@ -1,3 +1,5 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2c56a5a4244b4a1583857cc0ea7066f1)](https://www.codacy.com/manual/synkre/marketboard-backend?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=icywaffle/marketboard-backend&amp;utm_campaign=Badge_Grade)
+
 ## Back-End of Marketboard Project
 
 [ffxivprofit](http://ffxivprofit.com/)
