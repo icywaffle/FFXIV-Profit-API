@@ -1,6 +1,6 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2c56a5a4244b4a1583857cc0ea7066f1)](https://www.codacy.com/manual/synkre/marketboard-backend?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=icywaffle/marketboard-backend&amp;utm_campaign=Badge_Grade)
 
-## Back-End of Marketboard Project
+## RESTful API Endpoint for FFXIV Profit
 
 [ffxivprofit](http://ffxivprofit.com/)
 
@@ -20,6 +20,11 @@ Dockerizing an application makes it more modular, and we can update and change o
 
 ## Tech Stack
 <b>Built with</b>
+-   [React](https://reactjs.org/)
+A front-end web framework that utilizes JSX and Javascript that allows and easier way to create dynamic and responsive web pages.
+
+-   [Material UI](https://material-ui.com/)
+Pre-built React Components for easier styling, built with Google's Material Design in mind.
 
 -   [Golang](https://golang.org/)
 A simple and fast language, that also has built-in concurrency.
@@ -33,31 +38,16 @@ A containerization application that allows you to create simple microservices, s
 -   [XIVAPI](https://xivapi.com/)
 A RESTful API endpoint that allows you to find information of items in an MMORPG, Final Fantasy XIV Online.
 
-## Current Features
-Hitting the endpoint
-
-`backendserver.extension/recipe/(insertItemIDHere)`
-
-will allow you to recieve a large JSON payload based on whatever was in the database at the time.
-
-It will also auto-update the database if it has encountered an item that it's never seen before.
-
 ## Future Features
 Total List of prices and materials that you need for crafting.
 Save your searched items into the database so that you can compare which items may net you more profit
 A cost of time in how much materials to actually gather.
 
-## Structure
-There are three Key structs that hold all the information.
-
-Profits, Recipes, Prices, which are located in `models/xivapi.go`
-
-The application will only hit the API if there's an item that it's never seen before, or if it's required to update an item, based on conditions, like if the recipe added was before our updated recipes struct time etc.
 
 ## Testing
 Hitting the endpoint
 
-`backendserver.extension/@tests`
+`ffxivprofit.com/@tests`
 
 Will provide a web-based linked on all the functional/unit tests that were programmed.
 
