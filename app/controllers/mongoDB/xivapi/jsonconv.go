@@ -2,11 +2,11 @@ package xivapi
 
 import (
 	"encoding/json"
+	"ffxiv-profit-api/app/models"
+	"ffxiv-profit-api/keys"
 	"fmt"
 	"io/ioutil"
 	"log"
-	"marketboard-backend/app/models"
-	"marketboard-backend/keys"
 	"net/http"
 	"strconv"
 	"sync"

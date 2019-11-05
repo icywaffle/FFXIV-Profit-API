@@ -1,7 +1,7 @@
 package app
 
 import (
-	"marketboard-backend/app/controllers"
+	"ffxiv-profit-api/app/controllers"
 	"net/http"
 
 	"github.com/revel/revel"

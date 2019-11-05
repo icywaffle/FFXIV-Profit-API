@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"marketboard-backend/app/controllers/mongoDB/xivapi"
-	"marketboard-backend/app/models"
+	"ffxiv-profit-api/app/controllers/mongoDB/xivapi"
+	"ffxiv-profit-api/app/models"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"marketboard-backend/app/controllers/mongoDB"
-	"marketboard-backend/app/models"
+	"ffxiv-profit-api/app/controllers/mongoDB"
+	"ffxiv-profit-api/app/models"
 
 	"github.com/revel/revel"
 )

@@ -2,7 +2,7 @@ package mongoDB
 
 import (
 	"context"
-	"marketboard-backend/app/models"
+	"ffxiv-profit-api/app/models"
 	"strconv"
 
 	"go.mongodb.org/mongo-driver/bson"

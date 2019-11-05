@@ -2,9 +2,10 @@ package controllers
 
 import (
 	"encoding/json"
+	"ffxiv-profit-api/app/controllers/mongoDB"
+	"ffxiv-profit-api/app/models"
 	"fmt"
 	"io/ioutil"
-	"marketboard-backend/app/models"
 	"net/http"
 	"strconv"
 
@@ -141,5 +142,30 @@ func (c UserInfo) Obtain() revel.Result {
 
 	}
 
+	return c.RenderJSON(jsonObject)
+}
+
+// ObtainUserProfit returns the top 20 recipes with most profit for a user.
+func (c UserInfo) ObtainUserProfit() revel.Result {
+	userID, _ := c.Session.Get("DiscordUserID")
+	if userID == nil {
+		// Forbidden
+		c.Response.Status = 403
+		return c.Render()
+	}
+
+	var UserItemStorage *mongoDB.UserItemStorage
+	UserItemStorage = UserStorageCollection.FindUserItemStorage(userID.(string))
+
+	// We don't really have a choice but to check every single item in our user collection
+	// Then sort them by profit percentage
+	// Then we can just send that array of sorted profit percentage, and just take the top 20.
+	// This is so that we can just send small payloads.
+	for RecipeID, RecipeProfit := range UserItemStorage.Profits {
+		fmt.Println(RecipeID, RecipeProfit)
+	}
+
+	// We'll just let the front-end sort this, because this map is going to be sorted by string lexicographically.
+	jsonObject := make(map[string]interface{})
 	return c.RenderJSON(jsonObject)
 }

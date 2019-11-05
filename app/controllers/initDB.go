@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"context"
+	"ffxiv-profit-api/app/controllers/mongoDB"
+	"ffxiv-profit-api/keys"
 	"log"
-	"marketboard-backend/app/controllers/mongoDB"
-	"marketboard-backend/keys"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

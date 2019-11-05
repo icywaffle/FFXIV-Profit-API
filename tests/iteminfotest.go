@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"marketboard-backend/app/controllers/mongoDB/xivapi"
+	"ffxiv-profit-api/app/controllers/mongoDB/xivapi"
 
 	"github.com/revel/revel/testing"
 )
