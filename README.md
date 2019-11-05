@@ -43,7 +43,6 @@ Total List of prices and materials that you need for crafting.
 Save your searched items into the database so that you can compare which items may net you more profit
 A cost of time in how much materials to actually gather.
 
-
 ## Testing
 Hitting the endpoint
 

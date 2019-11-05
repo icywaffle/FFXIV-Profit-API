@@ -43,7 +43,7 @@ function LogoutComponent(props) {
     const anchorRef = React.useRef(null)
 
     const handleToggle = () => {
-        setOpen(prevOpen => !prevOpen)
+        setOpen((prevOpen) => !prevOpen)
     }
 
     const handleClose = (event) => {
