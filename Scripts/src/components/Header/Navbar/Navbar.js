@@ -27,10 +27,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navbar() {
     const classes = useStyles()
-    const sections = [
+    var profitsURL = "/"
+    if (window.location.hostname === "localhost") {
+        profitsURL = "http://localhost:3000"
+    }
+    var sections = [
         ["API Home", "/api/"],
         ["Documentation", "/api/documentation/"],
-        ["Profits Home", "/"],
+        ["Profits Home", profitsURL],
     ]
     return (
         <AppBar className={classes.appBar} color="default">

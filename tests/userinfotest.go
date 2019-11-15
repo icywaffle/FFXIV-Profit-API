@@ -3,8 +3,11 @@ package tests
 import (
 	"bytes"
 	"encoding/json"
+	"ffxiv-profit-api/app/controllers"
 	"ffxiv-profit-api/app/controllers/mongoDB"
 	"ffxiv-profit-api/app/models"
+	"ffxiv-profit-api/keys"
+	"fmt"
 
 	"github.com/revel/revel/testing"
 )
@@ -16,7 +19,16 @@ type UserInfoTest struct {
 
 // Before initializes before our tests runs.
 func (t *UserInfoTest) Before() {
-	println("Set up")
+	fmt.Println("Setup")
+
+	// We need to log in first
+	AuthToken := models.DiscordToken{
+		AccessToken: keys.TestAuthKey,
+	}
+	dataByte, _ := json.Marshal(AuthToken)
+	dataReader := bytes.NewReader(dataByte)
+	t.Post("/api/testlogin", "application/json", dataReader)
+	fmt.Println(t.Response.Status)
 }
 
 ///////////////////////// Mocks //////////////////////////
@@ -66,19 +78,53 @@ func (t *UserInfoTest) TestIfAddUserInfoToMapChangesInfo() {
 	t.AssertNotEqual(ResultUserItemStorage, *MockUserItemStorage)
 }
 
+// TestQuickSortUserProfits actually sorts our response in descending order.
+func (t *UserInfoTest) TestQuickSortUserProfits() {
+	mockUserProfits := make([]models.UserProfits, 4)
+
+	mockUserProfits[0] = models.UserProfits{
+		RecipeID:         1,
+		ProfitPercentage: 1,
+	}
+	mockUserProfits[1] = models.UserProfits{
+		RecipeID:         2,
+		ProfitPercentage: -100,
+	}
+
+	mockUserProfits[2] = models.UserProfits{
+		RecipeID:         3,
+		ProfitPercentage: 200,
+	}
+	mockUserProfits[3] = models.UserProfits{
+		RecipeID:         4,
+		ProfitPercentage: 20,
+	}
+
+	sortedMockUserProfits := make([]models.UserProfits, 4)
+	// Eyeball sorted
+	sortedMockUserProfits[0] = mockUserProfits[2]
+	sortedMockUserProfits[1] = mockUserProfits[3]
+	sortedMockUserProfits[2] = mockUserProfits[0]
+	sortedMockUserProfits[3] = mockUserProfits[1]
+
+	controllers.QuickSortUserProfits(mockUserProfits, 0, len(mockUserProfits)-1)
+	t.AssertEqual(sortedMockUserProfits, mockUserProfits)
+
+}
+
 ////////////////// Functional Tests //////////////////////
 
 // TestIfPOSTuserinfoSucceeded checks if we can send a proper POST request to the backend server
 func (t *UserInfoTest) TestIfPOSTuserinfoSucceeded() {
 	dataByte, _ := json.Marshal(MockUserSubmissionData())
 	dataReader := bytes.NewReader(dataByte)
-	t.Post("/userinfo/Test", "application/json", dataReader)
-	t.AssertEqual(t.Response.Status, "200 OK")
+	t.Post("/api/userinfo/", "application/json", dataReader)
+	t.AssertEqual(t.Response.Status, "201 Created")
 }
 
 // TestifGETuserinfoSucceeded checks if we can send a GET request to the backend server for a user info
 func (t *UserInfoTest) TestifGETuserinfoSucceeded() {
-	t.Get("/userinfo/Test/recipe/33180")
+	t.Get("/api/userinfo/recipe/33180")
 	t.AssertEqual(t.Response.Status, "200 OK")
 }
 
@@ -93,10 +139,10 @@ func (t *UserInfoTest) TestIfDatabaseDocumentExistsAfterPOST() {
 	// We need to refresh the data just in case
 	dataByte, _ := json.Marshal(MockUserSubmissionData())
 	dataReader := bytes.NewReader(dataByte)
-	t.Post("/userinfo/Test", "application/json", dataReader)
+	t.Post("/api/userinfo/", "application/json", dataReader)
 
 	// Then we can check if the data is not empty
-	t.Get("/userinfo/Test/recipe/33180")
+	t.Get("/api/userinfo/recipe/33180")
 	var UserInfoResponse UserInfoResponse
 	emptyUserInfoResponse := UserInfoResponse
 	json.Unmarshal(t.ResponseBody, &UserInfoResponse)
@@ -105,5 +151,7 @@ func (t *UserInfoTest) TestIfDatabaseDocumentExistsAfterPOST() {
 
 // After shows when tests are completed
 func (t *UserInfoTest) After() {
-	println("Tear down")
+	fmt.Println("Tear Down")
+	// Logout when done
+	t.Get("/api/userinfo/logout")
 }

@@ -50,8 +50,13 @@ function OAuth2(props) {
                     AccessToken: data.access_token,
                 }
                 // We also need to log into the API, since our token will expire
-                fetch("https://" + window.location.hostname + "/api/userinfo/login/", {
+                var APIurl = "https://" + window.location.hostname + "/api/userinfo/login/"
+                if (window.location.hostname === "localhost") {
+                    APIurl = "http://localhost:8080/api/userinfo/login/"
+                }
+                fetch(APIurl, {
                     method: "POST",
+                    credentials: "include",
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -69,7 +74,11 @@ function OAuth2(props) {
                         setLogin(localStorage.getItem("user"))
 
                         // Once we"re done getting data, move the user off of the query string.
-                        window.location.href = "https://" + window.location.hostname + "/api/"
+                        var redirectURL = "https://" + window.location.hostname + "/api/"
+                        if (window.location.hostname === "localhost") {
+                            redirectURL = "http://localhost:8080/api/"
+                        }
+                        window.location.href = redirectURL
                     })
             })
 

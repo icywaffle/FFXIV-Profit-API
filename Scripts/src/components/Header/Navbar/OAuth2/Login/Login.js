@@ -5,8 +5,16 @@ function Login(props) {
     function Logout() {
         localStorage.removeItem("user")
         localStorage.removeItem("AccessToken")
-        fetch("https://" + window.location.hostname + "/api/userinfo/logout")
-        window.location.href = "https://" + window.location.hostname + "/api/"
+        var APIurl = "https://" + window.location.hostname + "/api/userinfo/logout"
+        var redirectURL = "https://" + window.location.hostname + "/api/"
+        if (window.location.hostname === "localhost") {
+            APIurl = "http://localhost:8080/api/userinfo/logout"
+            redirectURL = "http://localhost:8080/api/"
+        }
+        fetch(APIurl, {
+            credentials: "include",
+        })
+        window.location.href = redirectURL
     }
 
     if (props.userinfo) {

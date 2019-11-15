@@ -51,8 +51,13 @@ func init() {
 
 // ValidateOrigin enables CORS policy, and handles pre-flight requests
 var ValidateOrigin = func(c *revel.Controller, fc []revel.Filter) {
+	originString := "https://ffxivprofit.com/"
+	// If we're in development, use the development origin request instead.
+	if c.Request.Host == "localhost:8080" {
+		originString = "http://localhost:3000"
+	}
 	if c.Request.Method == "OPTIONS" {
-		c.Response.Out.Header().Add("Access-Control-Allow-Origin", "*")
+		c.Response.Out.Header().Add("Access-Control-Allow-Origin", originString)
 		c.Response.Out.Header().Add("Access-Control-Allow-Headers", "Content-Type,AccessToken,X-CSRF-Token, Authorization")
 		c.Response.Out.Header().Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
 		c.Response.Out.Header().Add("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
@@ -60,10 +65,11 @@ var ValidateOrigin = func(c *revel.Controller, fc []revel.Filter) {
 		c.Response.SetStatus(http.StatusNoContent)
 	} else {
 		c.Response.Out.Header().Add("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
-		c.Response.Out.Header().Add("Access-Control-Allow-Origin", "*")
+		c.Response.Out.Header().Add("Access-Control-Allow-Credentials", "true")
+		c.Response.Out.Header().Add("Access-Control-Allow-Origin", originString)
 		c.Response.Out.Header().Add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 		c.Response.Out.Header().Add("Content-Type", "application/json; charset=UTF-8")
-		c.Response.Out.Header().Add("X-Frame-Options", "SAMORIGIN")
+		c.Response.Out.Header().Add("X-Frame-Options", "SAMEORIGIN")
 		c.Response.Out.Header().Add("Vary", "Origin, Access-Control-Request-Method, Access-Control-Request-Headers")
 
 		fc[0](c, fc[1:]) // Execute the next filter stage.

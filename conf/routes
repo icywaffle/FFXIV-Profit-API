@@ -13,10 +13,15 @@ GET     /api/discordcode/                           ItemInfo.Index
 GET     /api/documentation/                         ItemInfo.Index
 GET     /api/recipe/:recipeID                       ItemInfo.Obtain
 
+# We need a separate test login, because we want to test without logging into Discord
+POST    /api/testlogin/                             UserInfo.TestLogin
+
 POST    /api/userinfo/                              UserInfo.Store
 POST    /api/userinfo/login                         UserInfo.Login
 GET     /api/userinfo/logout                        UserInfo.Logout
 GET     /api/userinfo/recipe/:recipeid              UserInfo.Obtain
+GET     /api/userinfo/profits                       UserInfo.ObtainUserProfit
+
 # Ignore favicon requests
 GET     /api/favicon.ico                            404
 

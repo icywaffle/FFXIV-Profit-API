@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"ffxiv-profit-api/app/controllers/mongoDB"
 	"ffxiv-profit-api/app/models"
+	"ffxiv-profit-api/keys"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -49,6 +50,18 @@ func (c UserInfo) Login(DiscordToken *models.DiscordToken) revel.Result {
 		c.Session["DiscordUserID"] = DiscordUser.ID
 	}
 	c.Response.Status = 201
+	return c.Render()
+}
+
+// TestLogin allows you to login in for testing environment, and test the other functions without getting 403'd.
+func (c UserInfo) TestLogin(DiscordToken *models.DiscordToken) revel.Result {
+	if DiscordToken.AccessToken == keys.TestAuthKey {
+		c.Response.Status = 201
+		c.Session["DiscordUserID"] = "Test"
+	} else {
+		c.Response.Status = 403
+	}
+
 	return c.Render()
 }
 
@@ -158,14 +171,49 @@ func (c UserInfo) ObtainUserProfit() revel.Result {
 	UserItemStorage = UserStorageCollection.FindUserItemStorage(userID.(string))
 
 	// We don't really have a choice but to check every single item in our user collection
-	// Then sort them by profit percentage
-	// Then we can just send that array of sorted profit percentage, and just take the top 20.
-	// This is so that we can just send small payloads.
-	for RecipeID, RecipeProfit := range UserItemStorage.Profits {
-		fmt.Println(RecipeID, RecipeProfit)
+	// We need to set it as an array, since maps are in random order in Go.
+	sortedRecipes := []models.UserProfits{}
+	for _, RecipeProfit := range UserItemStorage.Profits {
+		sortedRecipes = append(sortedRecipes, RecipeProfit)
 	}
 
-	// We'll just let the front-end sort this, because this map is going to be sorted by string lexicographically.
+	// Then sort them by profit percentage
+	QuickSortUserProfits(sortedRecipes, 0, len(sortedRecipes)-1)
+
+	// Then we can just send that array of sorted profit percentage, and just take the top 20.
+	// This is so that we can just send small payloads.
+	if len(sortedRecipes) > 20 {
+		sortedRecipes = sortedRecipes[:21]
+	}
+
 	jsonObject := make(map[string]interface{})
+	jsonObject["SortedRecipes"] = sortedRecipes
 	return c.RenderJSON(jsonObject)
+}
+
+// QuickSortUserProfits sorts using quicksort, except it targets percentageProfit inside a UserProfits array.
+func QuickSortUserProfits(recipes []models.UserProfits, left int, right int) {
+	// Base Case
+	if left >= right {
+		return
+	}
+
+	pivot := right
+
+	swapped := left - 1
+
+	for i := left; i < right; i++ {
+		if recipes[i].ProfitPercentage >= recipes[pivot].ProfitPercentage {
+			swapped++
+			recipes[i], recipes[swapped] = recipes[swapped], recipes[i]
+		}
+	}
+
+	// Position right after the last swapped element, is the correct pivot position
+	swapped++
+	recipes[swapped], recipes[pivot] = recipes[pivot], recipes[swapped]
+
+	// Quicksort left, and quicksort right
+	QuickSortUserProfits(recipes, left, swapped-1)
+	QuickSortUserProfits(recipes, swapped+1, right)
 }
