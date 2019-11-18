@@ -6,10 +6,6 @@ import GitHubIcon from "@material-ui/icons/GitHub"
 import IconButton from "@material-ui/core/IconButton"
 import Grid from "@material-ui/core/Grid"
 
-import MenuIcon from "@material-ui/icons/Menu"
-
-import { BrowserRouter as Router, Route } from "react-router-dom"
-import OAuth2 from "./OAuth2"
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -32,9 +28,9 @@ export default function Navbar() {
         profitsURL = "http://localhost:3000"
     }
     var sections = [
-        ["API Home", "/api/"],
-        ["Documentation", "/api/documentation/"],
         ["Profits Home", profitsURL],
+        ["Documentation", "/api/documentation/"],
+        ["API Home", "/api/"],
     ]
     return (
         <AppBar className={classes.appBar} color="default">
@@ -71,11 +67,6 @@ export default function Navbar() {
                             <IconButton href="https://github.com/icywaffle/marketboard-backend" target="_blank" rel="noopener" className={classes.backendButton} aria-label="Back-End" color="secondary">
                                 <GitHubIcon />
                             </IconButton>
-                        </Grid>
-                        <Grid item>
-                            <Router>
-                                <Route path="/api*" render={(querycode) => <OAuth2 code={querycode} />} />
-                            </Router>
                         </Grid>
                     </Grid>
                 </Grid>
