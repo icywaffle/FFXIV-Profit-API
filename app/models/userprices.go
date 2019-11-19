@@ -2,14 +2,19 @@ package models
 
 // UserSubmission is an object that holds the payload that is necessary to store in the database.
 type UserSubmission struct {
+	// Profit Information
 	UserID           string
 	RecipeID         int
 	ItemID           int
+	ItemName         string
+	IconID           int
+	MaterialCosts    int
 	Profits          int
 	ProfitPercentage int
 	MarketItemPrice  int
 	MarketAmount     int
 
+	// Price Information
 	IngredientItemID       []int
 	MarketIngredientPrice  []int
 	MarketIngredientAmount []int
@@ -27,7 +32,10 @@ type UserPrices struct {
 type UserProfits struct {
 	RecipeID         int
 	ItemID           int
+	ItemName         string
+	IconID           int
 	IngredientItemID []int
+	MaterialCosts    int
 	Profits          int
 	ProfitPercentage int
 }

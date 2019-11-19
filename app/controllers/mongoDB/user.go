@@ -68,6 +68,9 @@ func AddUserInfoToMap(newUserStorage *UserItemStorage, UserSubmission *models.Us
 	mainProfits := models.UserProfits{
 		RecipeID:         UserSubmission.RecipeID,
 		ItemID:           UserSubmission.ItemID,
+		ItemName:         UserSubmission.ItemName,
+		IconID:           UserSubmission.IconID,
+		MaterialCosts:    UserSubmission.MaterialCosts,
 		IngredientItemID: UserSubmission.IngredientItemID,
 		Profits:          UserSubmission.Profits,
 		ProfitPercentage: UserSubmission.ProfitPercentage,
