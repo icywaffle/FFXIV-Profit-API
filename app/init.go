@@ -23,6 +23,7 @@ func init() {
 	if err := BuildFrontEnd.Run(); err != nil {
 		log.Fatal(err)
 	}*/
+
 	// Filters is the default set of global filters.
 	revel.Filters = []revel.Filter{
 		ValidateOrigin,
