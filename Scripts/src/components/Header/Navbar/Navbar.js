@@ -28,9 +28,9 @@ export default function Navbar() {
         profitsURL = "http://localhost:3000"
     }
     var sections = [
-        ["Profits Home", profitsURL],
+        ["Home", profitsURL],
+        ["API", "/api/"],
         ["Documentation", "/api/documentation/"],
-        ["API Home", "/api/"],
     ]
     return (
         <AppBar className={classes.appBar} color="default">
