@@ -20,7 +20,10 @@ POST    /api/userinfo/                              UserInfo.Store
 POST    /api/userinfo/login                         UserInfo.Login
 GET     /api/userinfo/logout                        UserInfo.Logout
 GET     /api/userinfo/recipe/:recipeid              UserInfo.Obtain
-GET     /api/userinfo/profits                       UserInfo.ObtainUserProfit
+GET     /api/userinfo/profits                       UserInfo.ObtainUserProfit 
+
+# We need to show API Analytics
+GET     /api/analytics                              Analytics.RequestAnalytics
 
 # Ignore favicon requests
 GET     /api/favicon.ico                            404
