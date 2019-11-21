@@ -20,7 +20,6 @@ func (c ItemInfo) Index() revel.Result {
 
 // Obtain grabs all recipe information from XIVAPI, and returns all of the information about the materials and main recipe.
 func (c ItemInfo) Obtain(recipeID int) revel.Result {
-
 	var baseinfo mongoDB.Information
 	// We have to initialize the maps here, to be able to allow recursive calls.
 	var innerinfo mongoDB.InnerInformation

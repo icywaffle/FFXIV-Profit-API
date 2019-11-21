@@ -16,6 +16,9 @@ var DB mongoDB.Collections
 // UserStorageCollection holds the User Storage collection from our database.
 var UserStorageCollection mongoDB.UserStorageCollection
 
+// APIAnalytics should hold client request info to a specific API endpoint
+var APIAnalytics *mongo.Collection
+
 // InitDB initializes DB so it would give the Clients so that we can access the database
 func InitDB() {
 	clientOptions := options.Client().ApplyURI(keys.MongoURI)
@@ -37,5 +40,7 @@ func InitDB() {
 	UserStorageCollection = mongoDB.UserStorageCollection{
 		Collection: database.Collection("UserStorage"),
 	}
+
+	APIAnalytics = database.Collection("APIAnalytics")
 
 }

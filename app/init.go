@@ -2,7 +2,9 @@ package app
 
 import (
 	"ffxiv-profit-api/app/controllers"
+	"ffxiv-profit-api/app/models"
 	"net/http"
+	"time"
 
 	"github.com/revel/revel"
 )
@@ -57,6 +59,15 @@ var ValidateOrigin = func(c *revel.Controller, fc []revel.Filter) {
 	if c.Request.Host == "localhost:8080" {
 		originString = "http://localhost:3000"
 	}
+	// Log API Requests
+	APILog := models.EndpointRequest{
+		ClientIP:      c.ClientIP,
+		Endpoint:      c.Request.URL.String(),
+		RequestedTime: time.Now(),
+	}
+	controllers.LogEndpointRequest(APILog)
+
+	// Pre-flight and Flight Request
 	if c.Request.Method == "OPTIONS" {
 		c.Response.Out.Header().Add("Access-Control-Allow-Origin", originString)
 		c.Response.Out.Header().Add("Access-Control-Allow-Headers", "Content-Type,AccessToken,X-CSRF-Token, Authorization")
