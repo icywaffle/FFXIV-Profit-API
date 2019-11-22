@@ -6,16 +6,13 @@
 module:testrunner
 # module:jobs
 
-# We need to separate the REST API endpoints from the User web application.
-# We can just use a /api/
-GET     /api/                                       ItemInfo.Index
-GET     /api/discordcode/                           ItemInfo.Index
-GET     /api/documentation/                         ItemInfo.Index
+# Anyone can obtain the recipe info for a specific item
 GET     /api/recipe/:recipeID                       ItemInfo.Obtain
 
 # We need a separate test login, because we want to test without logging into Discord
 POST    /api/testlogin/                             UserInfo.TestLogin
 
+# These are the main routes for POST and GET information about profits and prices
 POST    /api/userinfo/                              UserInfo.Store
 POST    /api/userinfo/login                         UserInfo.Login
 GET     /api/userinfo/logout                        UserInfo.Logout
@@ -31,8 +28,6 @@ GET     /api/favicon.ico                            404
 # Map static resources from the /app/public folder to the /public path
 GET     /api/public/*filepath                       Static.Serve("public")
 
-# Allows React scripts to work since we need to expose all the local script files.
-GET     /api/Scripts/*filepath                      Static.Serve("Scripts")
 
 # Catch all, this will route any request into the controller path
 #
