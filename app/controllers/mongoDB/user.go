@@ -3,6 +3,7 @@ package mongoDB
 import (
 	"context"
 	"ffxiv-profit-api/app/models"
+	"log"
 	"strconv"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -59,6 +60,16 @@ func (coll UserStorageCollection) AddUserItem(userItemStorage *UserItemStorage, 
 	coll.UpdateOne(context.TODO(), filter, bson.D{
 		{Key: "$set", Value: userItemStorage},
 	})
+}
+
+// DeleteUserItem removes an user's item storage permanently.
+func (coll UserStorageCollection) DeleteUserItem(userID string) {
+	filter := bson.M{"userid": userID}
+	result, err := coll.DeleteOne(context.TODO(), filter)
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println(result)
 }
 
 // AddUserInfoToMap places all the UserSubmission into a user's storage document.
