@@ -7,26 +7,26 @@ module:testrunner
 # module:jobs
 
 # Anyone can obtain the recipe info for a specific item
-GET     /api/recipe/:recipeID                       ItemInfo.Obtain
+GET     /recipe/:recipeID                       ItemInfo.Obtain
 
 # We need a separate test login, because we want to test without logging into Discord
-POST    /api/testlogin/                             UserInfo.TestLogin
+POST    /testlogin/                             UserInfo.TestLogin
 
 # These are the main routes for POST and GET information about profits and prices
-POST    /api/userinfo/                              UserInfo.Store
-POST    /api/userinfo/login                         UserInfo.Login
-GET     /api/userinfo/logout                        UserInfo.Logout
-GET     /api/userinfo/recipe/:recipeid              UserInfo.Obtain
-GET     /api/userinfo/profits                       UserInfo.ObtainUserProfit 
+POST    /userinfo/                              UserInfo.Store
+POST    /userinfo/login                         UserInfo.Login
+GET     /userinfo/logout                        UserInfo.Logout
+GET     /userinfo/recipe/:recipeid              UserInfo.Obtain
+GET     /userinfo/profits                       UserInfo.ObtainUserProfit 
 
 # We need to show API Analytics
-GET     /api/analytics                              Analytics.RequestAnalytics
+GET     /analytics                              Analytics.RequestAnalytics
 
 # Ignore favicon requests
-GET     /api/favicon.ico                            404
+GET     /favicon.ico                            404
 
 # Map static resources from the /app/public folder to the /public path
-GET     /api/public/*filepath                       Static.Serve("public")
+GET     /public/*filepath                       Static.Serve("public")
 
 
 # Catch all, this will route any request into the controller path

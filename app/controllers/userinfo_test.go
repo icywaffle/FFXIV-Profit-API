@@ -18,7 +18,6 @@ type UserInfoTest struct {
 // >go test -v -coverprofile=coverage.out ffxiv-profit-api/app/...  -args -revel.importPath=ffxiv-profit-api
 /*
 	After hours of debugging, suite.Get and any of the HTTP methods provided by just don't work
-	You have to use the custom methods, GetCustom, and PostCustom, since the defaults just don't append the right links
 */
 func TestMain(m *testing.M) {
 	testsuite.RevelTestHelper(m, "dev", run.Run)
