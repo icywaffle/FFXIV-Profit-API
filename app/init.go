@@ -54,21 +54,27 @@ func init() {
 
 // ValidateOrigin enables CORS policy, and handles pre-flight requests
 var ValidateOrigin = func(c *revel.Controller, fc []revel.Filter) {
-	originString := "https://ffxivprofit.com/"
+	originString := "https://ffxivprofit.com"
 	// Allow only specific headers to be accessed.
 	switch c.Request.GetHttpHeader("Origin") {
 	case "http://localhost:3000":
 		// Local Web App
 		originString = "http://localhost:3000"
-	case "https://ffxivprofit.com/":
+	case "https://ffxivprofit.com":
 		// Public Web App
-		originString = "https://ffxivprofit.com/"
+		originString = "https://ffxivprofit.com"
 	case "http://localhost:3001":
 		// Local Analytics
 		originString = "http://localhost:3001"
-	case "https://analytics.ffxivprofit.com/":
+	case "https://analytics.ffxivprofit.com":
 		// Public Analytics
-		originString = "https://analytics.ffxivprofit.com/"
+		originString = "https://analytics.ffxivprofit.com"
+	case "https://example.com":
+		// Kubernetes Web App
+		originString = "https://example.com"
+	case "https://analytics.example.com":
+		// Kubernetes Analytics
+		originString = "https://analytics.example.com"
 	}
 	// Log API Requests
 	APILog := models.EndpointRequest{
