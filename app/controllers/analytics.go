@@ -11,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// Analytics for visitors to the API
 type Analytics struct {
 	*revel.Controller
 }
@@ -20,7 +21,7 @@ func LogEndpointRequest(request models.EndpointRequest) {
 	APIAnalytics.InsertOne(context.TODO(), request)
 }
 
-// AuthorizedAnalytics returns all IPs and endpoints stored in the database
+// APIRequestAnalytics returns all IPs and endpoints stored in the database
 func APIRequestAnalytics(isAuthorized bool) []*models.EndpointRequest {
 	options := options.FindOptions{}
 	options.Sort = bson.D{{Key: "requestedtime", Value: 1}}
@@ -56,6 +57,7 @@ func APIRequestAnalytics(isAuthorized bool) []*models.EndpointRequest {
 	return allRequests
 }
 
+// RequestAnalytics is the endpoint that a user should call for analytics stored in the database
 func (c Analytics) RequestAnalytics() revel.Result {
 	// AUTHENTICATION
 	// Checks if there is a session for this user.
