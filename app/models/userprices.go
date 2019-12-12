@@ -30,6 +30,7 @@ type UserPrices struct {
 
 // UserProfits is the calculated profit for a specific recipe.
 type UserProfits struct {
+	Added            int64
 	RecipeID         int
 	ItemID           int
 	ItemName         string

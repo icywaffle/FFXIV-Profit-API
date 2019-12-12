@@ -5,6 +5,7 @@ import (
 	"ffxiv-profit-api/app/models"
 	"log"
 	"strconv"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -77,6 +78,7 @@ func AddUserInfoToMap(newUserStorage *UserItemStorage, UserSubmission *models.Us
 	// We add the main recipe first, then it's materials.
 	// If the material is craftable, then it'll have it's separate call to this function
 	mainProfits := models.UserProfits{
+		Added:            time.Now().Unix(),
 		RecipeID:         UserSubmission.RecipeID,
 		ItemID:           UserSubmission.ItemID,
 		ItemName:         UserSubmission.ItemName,
