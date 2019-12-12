@@ -6,6 +6,9 @@
 module:testrunner
 # module:jobs
 
+# Home Page
+GET     /                                       Home.Index
+
 # Anyone can obtain the recipe info for a specific item
 GET     /recipe/:recipeID                       ItemInfo.Obtain
 

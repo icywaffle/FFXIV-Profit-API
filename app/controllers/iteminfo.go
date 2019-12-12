@@ -12,12 +12,6 @@ type ItemInfo struct {
 	*revel.Controller
 }
 
-// Index shows the single react page for the API.
-func (c ItemInfo) Index() revel.Result {
-
-	return c.RenderTemplate("ItemInfo/Index.html")
-}
-
 // Obtain grabs all recipe information from XIVAPI, and returns all of the information about the materials and main recipe.
 func (c ItemInfo) Obtain(recipeID int) revel.Result {
 	var baseinfo mongoDB.Information
